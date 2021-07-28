@@ -56,15 +56,31 @@
 		64DD417B26B12CD9007E5135 /* Kontry_UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				64DD417C26B12CD9007E5135 /* AppDelegate.swift */,
-				64DD417E26B12CD9007E5135 /* SceneDelegate.swift */,
-				64DD418026B12CD9007E5135 /* ViewController.swift */,
+				64DD419126B12D7E007E5135 /* App */,
+				64DD419226B12D87007E5135 /* View Controller */,
 				64DD418226B12CD9007E5135 /* Main.storyboard */,
 				64DD418526B12CDC007E5135 /* Assets.xcassets */,
 				64DD418726B12CDC007E5135 /* LaunchScreen.storyboard */,
 				64DD418A26B12CDC007E5135 /* Info.plist */,
 			);
 			path = Kontry_UIKit;
+			sourceTree = "<group>";
+		};
+		64DD419126B12D7E007E5135 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				64DD417C26B12CD9007E5135 /* AppDelegate.swift */,
+				64DD417E26B12CD9007E5135 /* SceneDelegate.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		64DD419226B12D87007E5135 /* View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				64DD418026B12CD9007E5135 /* ViewController.swift */,
+			);
+			path = "View Controller";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
