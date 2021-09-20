@@ -24,23 +24,6 @@ class CountryListViewController: UIViewController {
     private var collectionViewCancellables = Dictionary<Int, AnyCancellable?>()
     private var cancellables = Set<AnyCancellable>()
     
-    //MARK: - Computed Properties
-    
-    private var collectionViewLayout: UICollectionViewCompositionalLayout {
-        let itemLayout = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemLayout)
-        
-        let groupLayout = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.1))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupLayout, subitems: [item])
-//        group.interItemSpacing = .fixed(15)
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 15
-        
-        return UICollectionViewCompositionalLayout(section: section)
-        
-    }
-    
     //MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -50,6 +33,10 @@ class CountryListViewController: UIViewController {
         configureConstraints()
         
         configureCollectionView()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        configureCollectionViewLayout()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -70,7 +57,7 @@ class CountryListViewController: UIViewController {
         cancellables.removeAll()
     }
 
-    //MARK: - Helper Methods
+    //MARK: - UI Methods
     
     private func configureNavigationBar() {
         navigationItem.title = "Countries"
@@ -80,13 +67,37 @@ class CountryListViewController: UIViewController {
     private func configureCollectionView() {
         collectionView.backgroundColor = UIColor.clear
         
-        collectionView.collectionViewLayout = collectionViewLayout
         collectionView.register(
             UINib(nibName: CountryCell.nibName, bundle: nil),
             forCellWithReuseIdentifier: CountryCell.reuseIdentifier
         )
                 
+        configureCollectionViewLayout()
         configureCollectionViewDataSource()
+    }
+    
+    private func configureCollectionViewLayout() {
+        
+        let itemWidthDimension: NSCollectionLayoutDimension = .fractionalWidth(1.0)
+        let itemHeightDimension: NSCollectionLayoutDimension = .fractionalHeight(1.0)
+        let itemLayout = NSCollectionLayoutSize(widthDimension: itemWidthDimension, heightDimension: itemHeightDimension)
+        let item = NSCollectionLayoutItem(layoutSize: itemLayout)
+        
+        
+        let groupWidthDimension: NSCollectionLayoutDimension = .fractionalWidth(1.0)
+        let groupHeightDimension: NSCollectionLayoutDimension = .fractionalHeight(traitCollection.isRegularHeight ? 0.07 : 0.15)
+        let groupItemCount = traitCollection.isRegularWidth ? 2 : 1
+        let groupLayout = NSCollectionLayoutSize(widthDimension: groupWidthDimension, heightDimension: groupHeightDimension)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupLayout, subitem: item, count: groupItemCount)
+        group.interItemSpacing = .fixed(15)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 15
+        section.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: 0, bottom: 0, trailing: 0)
+        
+        let collectionViewLayout = UICollectionViewCompositionalLayout(section: section)
+        
+        collectionView.setCollectionViewLayout(collectionViewLayout, animated: true)
     }
     
     private func configureCollectionViewDataSource() {
@@ -112,6 +123,8 @@ class CountryListViewController: UIViewController {
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
 }
+
+
 
 //MARK: - Constraints Activation Methods
 
