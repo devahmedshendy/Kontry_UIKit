@@ -15,4 +15,8 @@ extension UITraitCollection {
     var isRegularHeight: Bool {
         return self.verticalSizeClass == .regular
     }
+    
+    var isCompactHeight: Bool {
+        return self.verticalSizeClass == .compact
+    }
 }

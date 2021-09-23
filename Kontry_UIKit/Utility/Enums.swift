@@ -7,12 +7,18 @@
 
 import Foundation
 
-//MARK: - Errors Enum
+//MARK: - Error Enums
 
-enum CountryFlagsError: Error {
-    case flagNotFound
-    case network
-    case unknown
+enum CountryFlagsApiError: Error {
+    case flagNotFound(error: String)
+    case network(error: String)
+    case unknown(error: String)
+}
+
+enum RestCountriesApiError: Error {
+    case network(error: String)
+    case decoding(error: String)
+    case unknown(error: String)
 }
 
 //MARK: - Other Enums

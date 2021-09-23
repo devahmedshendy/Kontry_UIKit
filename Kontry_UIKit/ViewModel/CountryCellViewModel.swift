@@ -20,7 +20,7 @@ final class CountryCellViewModel {
     
     //MARK: - Actions
     
-    func get24PixelFlag(countryCode: String) -> AnyPublisher<Data, CountryFlagsError> {
+    func get24PixelFlag(countryCode: String) -> AnyPublisher<Data, CountryFlagsApiError> {
         return repository
             .getCountryFlag(countryCode: countryCode, size: FlagSize.size24)
     }

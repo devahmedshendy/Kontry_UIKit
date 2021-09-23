@@ -21,7 +21,6 @@ final class RestCountriesService {
     
     func getAllCountries() -> URLSession.DataTaskPublisher {
         let url = RestCountriesAPI.createAllURL()
-
         return defaultSession.dataTaskPublisher(for: url)
     }
     

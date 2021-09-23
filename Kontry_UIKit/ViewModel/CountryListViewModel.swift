@@ -16,43 +16,32 @@ final class CountryListViewModel {
        return Repository()
     }()
     
-    private var cancellables = Set<AnyCancellable>()
-    
-    //MARK: - Init
-    
-    init() {
-        updateCountryList()
-    }
-    
-    //MARK: - STATES with GETTERS
-    
-    @Published
-    private(set) var countryList: [Country] = []
+    //MARK: - STATES/GETTERS
     
     //MARK: - MUTATIONS
-    
-    func EMIT_COUNTRY_LIST(_ list: [Country]) {
-        countryList = list
-    }
         
     //MARK: - ACTIONS
     
-    private func updateCountryList() {
-        repository
-            .fetchCountryList()
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                },
-                receiveValue: { [weak self] list in
-                    self?.EMIT_COUNTRY_LIST(list)
-                }
-            )
-            .store(in: &cancellables)
+//    private func updateCountryList() {
+//        repository
+//            .fetchCountryList()
+//            .sink(
+//                receiveCompletion: { completion in
+//                    switch completion {
+//                    case .finished:
+//                        break
+//                    case .failure(let error):
+//                        print(error.localizedDescription)
+//                    }
+//                },
+//                receiveValue: { [weak self] list in
+//                    self?.EMIT_COUNTRY_LIST(list)
+//                }
+//            )
+//            .store(in: &cancellables)
+//    }
+    
+    func loadCountries() -> AnyPublisher<[Country], RestCountriesApiError>  {
+        return repository.fetchCountryList()
     }
 }

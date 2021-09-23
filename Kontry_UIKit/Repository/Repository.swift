@@ -17,17 +17,29 @@ final class Repository {
     
     //MARK: - RestCountries API Methods
     
-    func fetchCountryList() -> AnyPublisher<[Country], Error> {        
+    func fetchCountryList() -> AnyPublisher<[Country], RestCountriesApiError> {
         return restCountriesService
             .getAllCountries()
             .map { $0.data }
             .decode(type: [Country].self, decoder: JSONDecoder())
+            .mapError { error -> RestCountriesApiError in
+                switch error {
+                case is URLError:
+                    return .network(error: "NetworkError: \(error.localizedDescription)")
+                    
+                case is DecodingError:
+                    return .decoding(error: "DecodingError: \(error.localizedDescription)")
+                    
+                default:
+                    return error as? RestCountriesApiError ?? .unknown(error: "UnknownError: \(error.localizedDescription)")
+                }
+            }
             .eraseToAnyPublisher()
     }
     
     
     
-    func getCountryFlag(countryCode: String, size: FlagSize) -> AnyPublisher<Data, CountryFlagsError> {
+    func getCountryFlag(countryCode: String, size: FlagSize) -> AnyPublisher<Data, CountryFlagsApiError> {
         return countryFlagsService
             .getCountryFlag(countryCode: countryCode, size: size)
             .tryMap { result -> Data in
@@ -35,18 +47,18 @@ final class Repository {
                 let statusCode = response.statusCode
                 
                 if statusCode == 404 {
-                    throw CountryFlagsError.flagNotFound
+                    throw CountryFlagsApiError.flagNotFound(error: "Flag not found for country code: \(countryCode), with size: \(size)")
                 }
                 
                 return result.data
             }
-            .mapError { error -> CountryFlagsError in
+            .mapError { error -> CountryFlagsApiError in
                 switch error {
                 case is URLError:
-                    return .network
+                    return .network(error: error.localizedDescription)
                     
                 default:
-                    return error as? CountryFlagsError ?? .unknown
+                    return error as? CountryFlagsApiError ?? .unknown(error: "UnknownError: \(error.localizedDescription)")
                 }
             }
             .eraseToAnyPublisher()

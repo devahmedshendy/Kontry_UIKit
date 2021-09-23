@@ -10,21 +10,50 @@ import Combine
 
 class CountryCell: UICollectionViewCell {
     
+    //MARK: - Static Properties
+    
+    static let reuseIdentifier = String(describing: CountryCell.self)
+    static let nibName = String(describing: CountryCell.self)
+    
     //MARK: - Outlets
     
     @IBOutlet weak var cellBackgroundView: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var flagImageView: UIImageView!
     
-    //MARK: - Static Properties
-    
-    static let reuseIdentifier = String(describing: CountryCell.self)
-    static let nibName = String(describing: CountryCell.self)
-    
     //MARK: - Properties
     
     private let vm = CountryCellViewModel()
     private var subscription: AnyCancellable?
+    
+    var country: Country? {
+        didSet {
+            nameLabel.text = country!.name
+            
+            subscription = vm
+                .get24PixelFlag(countryCode: country!.code)
+                .receive(on: RunLoop.main)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        switch completion {
+                        case .finished:
+                            break
+                            
+                        case .failure(.flagNotFound):
+                            self?.flagImageView.image = UIImage(named: "flag_error_placeholder")
+                            break
+                            
+                        case .failure(.network(let error)),
+                             .failure(.unknown(let error)):
+                            print(error)
+                            break
+                        }
+                    },
+                    receiveValue: { [weak self] imageData in
+                        self?.flagImageView.image = UIImage(data: imageData)
+                    })
+        }
+    }
     
     //MARK: - Life Cycle Methods
     
@@ -40,38 +69,6 @@ class CountryCell: UICollectionViewCell {
         flagImageView.image = UIImage(named: "flag_placeholder")
         subscription?.cancel()
         subscription = nil
-    }
-    
-    //MARK: - Helper Methods
-    
-    func updateCell(with country: Country) {
-        nameLabel.text = country.name
-        
-        subscription = vm
-            .get24PixelFlag(countryCode: country.code)
-            .receive(on: RunLoop.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        break
-                        
-                    case .failure(.flagNotFound):
-                        self?.flagImageView.image = UIImage(named: "flag_error_placeholder")
-                        break
-                        
-                    case .failure(.network):
-                        print("Network Error: couldn't fetch country flag.")
-                        break
-                        
-                    case .failure(.unknown):
-                        print("Unknown error: couldn't fetch country flag")
-                        break
-                    }
-                },
-                receiveValue: { [weak self] imageData in
-                    self?.flagImageView.image = UIImage(data: imageData)
-                })
     }
 }
 
