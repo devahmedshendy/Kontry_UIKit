@@ -22,25 +22,6 @@ final class CountryListViewModel {
         
     //MARK: - ACTIONS
     
-//    private func updateCountryList() {
-//        repository
-//            .fetchCountryList()
-//            .sink(
-//                receiveCompletion: { completion in
-//                    switch completion {
-//                    case .finished:
-//                        break
-//                    case .failure(let error):
-//                        print(error.localizedDescription)
-//                    }
-//                },
-//                receiveValue: { [weak self] list in
-//                    self?.EMIT_COUNTRY_LIST(list)
-//                }
-//            )
-//            .store(in: &cancellables)
-//    }
-    
     func loadCountries() -> AnyPublisher<[Country], RestCountriesApiError>  {
         return repository.fetchCountryList()
     }
