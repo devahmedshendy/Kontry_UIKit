@@ -12,9 +12,7 @@ final class CountryListViewModel {
     
     //MARK: - Properties
     
-    private lazy var repository: Repository = {
-       return Repository()
-    }()
+    private lazy var repository: Repository = Repository()
     
     //MARK: - STATES/GETTERS
     
@@ -22,7 +20,7 @@ final class CountryListViewModel {
         
     //MARK: - ACTIONS
     
-    func loadCountries() -> AnyPublisher<[Country], RestCountriesApiError>  {
+    func loadCountries() -> AnyPublisher<[Country], RestCountriesAPI.Error>  {
         return repository.fetchCountryList()
     }
 }

@@ -7,6 +7,9 @@
 
 import UIKit
 
+/*
+ Clean this class from retryIndicator
+ */
 class RetryErrorView: UIView {
     
     //MARK: - Static Properties
@@ -28,16 +31,16 @@ class RetryErrorView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        initRetryErrorView()
+        initView()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         
-        initRetryErrorView()
+        initView()
     }
 
-    private func initRetryErrorView() {
+    private func initView() {
         loadNib()
         enlargeRetryIndicator()
         configureConstraints()

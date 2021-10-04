@@ -31,7 +31,7 @@
                             </collectionView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" name="background-color"/>
+                        <color key="backgroundColor" name="screen_background"/>
                     </view>
                     <navigationItem key="navigationItem" id="944-Ov-dK2"/>
                     <connections>
@@ -51,13 +51,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="oG0-fU-7dY"/>
-                        <color key="backgroundColor" name="background-color"/>
+                        <color key="backgroundColor" name="screen_background"/>
                     </view>
                     <navigationItem key="navigationItem" id="pGq-2L-JlG"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2lm-SU-QZL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1881" y="125"/>
+            <point key="canvasLocation" x="1879.7101449275365" y="124.55357142857142"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="uEY-RE-eqU">
@@ -79,7 +79,7 @@
         </scene>
     </scenes>
     <resources>
-        <namedColor name="background-color">
+        <namedColor name="screen_background">
             <color red="0.11400000005960464" green="0.11400000005960464" blue="0.11400000005960464" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">

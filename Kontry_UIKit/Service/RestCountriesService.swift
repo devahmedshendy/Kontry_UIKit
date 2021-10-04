@@ -29,4 +29,10 @@ final class RestCountriesService {
         
         return defaultSession.dataTaskPublisher(for: url)
     }
+    
+    func getCountryByCode(_ code: String) -> URLSession.DataTaskPublisher {
+        let url = RestCountriesAPI.createSearchByAlphaURL(code)
+        
+        return defaultSession.dataTaskPublisher(for: url)
+    }
 }

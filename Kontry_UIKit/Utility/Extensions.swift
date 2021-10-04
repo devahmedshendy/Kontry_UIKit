@@ -20,3 +20,15 @@ extension UITraitCollection {
         return self.verticalSizeClass == .compact
     }
 }
+
+extension Array where Element: Any {
+    var isNotEmpty: Bool {
+        return !isEmpty
+    }
+}
+
+extension String {
+    var isNotEmpty: Bool {
+        return !isEmpty
+    }
+}

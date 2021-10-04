@@ -23,7 +23,7 @@ class CountryCell: UICollectionViewCell {
     
     //MARK: - Properties
     
-    private let vm = CountryCellViewModel()
+    private let vm = FlagViewModel()
     private var subscription: AnyCancellable?
     
     var country: Country? {
@@ -31,7 +31,7 @@ class CountryCell: UICollectionViewCell {
             nameLabel.text = country!.name
             
             subscription = vm
-                .get24PixelFlag(countryCode: country!.code)
+                .get40WidthFlag(countryCode: country!.code)
                 .receive(on: RunLoop.main)
                 .sink(
                     receiveCompletion: { [weak self] completion in
@@ -39,8 +39,8 @@ class CountryCell: UICollectionViewCell {
                         case .finished:
                             break
                             
-                        case .failure(.flagNotFound):
-                            self?.flagImageView.image = UIImage(named: "flag_error_placeholder")
+                        case .failure(.notFound):
+                            self?.flagImageView.image = Asset.Placeholder.w25FlagError
                             break
                             
                         case .failure(.network(let error)),
@@ -66,7 +66,7 @@ class CountryCell: UICollectionViewCell {
     }
     
     override func prepareForReuse() {
-        flagImageView.image = UIImage(named: "flag_placeholder")
+        flagImageView.image = Asset.Placeholder.w25Flag
         subscription?.cancel()
         subscription = nil
     }
@@ -76,10 +76,10 @@ class CountryCell: UICollectionViewCell {
 
 extension CountryCell {
     private func configureCellUI() {
-        flagImageView.image = UIImage(named: "flag_placeholder")
+        flagImageView.image = Asset.Placeholder.w25Flag
         
         cellBackgroundView.layer.borderWidth = CGFloat(1)
-        cellBackgroundView.layer.borderColor = UIColor(named: "list-border-color")?.cgColor
+        cellBackgroundView.layer.borderColor = Asset.Color.countryCellBorder.cgColor
         cellBackgroundView.layer.cornerRadius = CGFloat(10)
     }
 }

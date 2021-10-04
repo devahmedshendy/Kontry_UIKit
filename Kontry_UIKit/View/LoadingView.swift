@@ -22,16 +22,16 @@ class LoadingView: UIView {
     override init(frame: CGRect) { // For using LoadingView in code
         super.init(frame: frame)
         
-        initLoadingView()
+        initView()
     }
     
     required init?(coder: NSCoder) { // For using LoadingView in IB
         super.init(coder: coder)
     
-        initLoadingView()
+        initView()
     }
     
-    private func initLoadingView() {
+    private func initView() {
         guard let nib = Bundle.main.loadNibNamed(LoadingView.nibName, owner: self, options: nil),
               let nibView = nib.first as? UIView
         else {

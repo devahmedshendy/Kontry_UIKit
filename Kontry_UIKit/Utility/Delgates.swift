@@ -10,3 +10,7 @@ import Foundation
 protocol RetryErrorViewDelegate {
     func didPressRetry()
 }
+
+protocol BackActionDelegate {
+    func didPressBack()
+}

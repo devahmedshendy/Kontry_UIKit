@@ -51,7 +51,7 @@ class CountryListViewController: UIViewController {
         cancellables.removeAll()
     }
     
-    //MARK: - Tail Collection Handler
+    //MARK: - RotateScreen Handler
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         configureCollectionViewLayout()
@@ -82,7 +82,8 @@ class CountryListViewController: UIViewController {
                     case .finished:
                         break
                         
-                    case .failure(.network(let error)),
+                    case .failure(.notFound(let error)),
+                         .failure(.network(let error)),
                          .failure(.decoding(let error)),
                          .failure(.unknown(let error)):
                         self.showRetryErrorView()
@@ -371,6 +372,13 @@ extension CountryListViewController: UICollectionViewDelegate {
             return
         }
         
-        performSegue(withIdentifier: "showCountryDetailSegue", sender: self)
+        performSegue(withIdentifier: "showCountryDetailSegue", sender: selectedCountry)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let vc = segue.destination as? CountryDetailsViewController,
+           let selectedCountry = sender as? Country {
+            vc.country = selectedCountry
+        }
     }
 }

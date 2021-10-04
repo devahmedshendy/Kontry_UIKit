@@ -18,8 +18,13 @@ final class FlagViewModel {
     
     //MARK: - Actions
     
-    func get24PixelFlag(countryCode: String) -> AnyPublisher<Data, FlagPediaAPI.Error> {
+    func get40WidthFlag(countryCode: String) -> AnyPublisher<Data, FlagPediaAPI.Error> {
         return repository
             .getCountryFlag(countryCode: countryCode, size: .w40)
+    }
+    
+    func get160WidthFlag(countryCode: String) -> AnyPublisher<Data, FlagPediaAPI.Error> {
+        return repository
+            .getCountryFlag(countryCode: countryCode, size: .w160)
     }
 }
