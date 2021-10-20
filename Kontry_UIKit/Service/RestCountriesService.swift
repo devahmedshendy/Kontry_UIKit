@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class RestCountriesService {
     
@@ -19,20 +20,32 @@ final class RestCountriesService {
     
     //MARK: - Methods
     
-    func getAllCountries() -> URLSession.DataTaskPublisher {
-        let url = RestCountriesAPI.createAllURL()
-        return defaultSession.dataTaskPublisher(for: url)
+    func getAllCountries(fields: String) -> AnyPublisher<Data, URLError> {
+        let url = RestCountriesAPI.createURLForAll(params: [ "fields": fields ])
+        
+        return defaultSession
+            .dataTaskPublisher(for: url)
+            .map { $0.data }
+            .eraseToAnyPublisher()
     }
     
-    func getCountryFlag(_ flagURL: String) -> URLSession.DataTaskPublisher {
-        let url = URL(string: flagURL)!
-        
-        return defaultSession.dataTaskPublisher(for: url)
-    }
-    
-    func getCountryByCode(_ code: String) -> URLSession.DataTaskPublisher {
-        let url = RestCountriesAPI.createSearchByAlphaURL(code)
-        
-        return defaultSession.dataTaskPublisher(for: url)
+    func getCountryByAlpha2Code(_ alpha2Code: String, fields: String) -> AnyPublisher<Data?, URLError> {
+        let url = RestCountriesAPI.createURLForSearch(by: RestCountriesAPI.Endpoint.alphaCode,
+                                                      value: alpha2Code,
+                                                      params: [ "fields": fields ])
+
+        return defaultSession
+            .dataTaskPublisher(for: url)
+            .map { result -> Data? in
+                let response = result.response as! HTTPURLResponse
+                let statusCode = response.statusCode
+                
+                if statusCode == 404 {
+                    return nil
+                }
+                
+                return result.data
+            }
+            .eraseToAnyPublisher()
     }
 }

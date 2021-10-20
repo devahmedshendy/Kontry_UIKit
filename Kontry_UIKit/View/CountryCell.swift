@@ -31,26 +31,23 @@ class CountryCell: UICollectionViewCell {
             nameLabel.text = country!.name
             
             subscription = vm
-                .get40WidthFlag(countryCode: country!.code)
+                .get40WidthFlag(alpha2Code: country!.alpha2Code)
                 .receive(on: RunLoop.main)
                 .sink(
-                    receiveCompletion: { [weak self] completion in
-                        switch completion {
-                        case .finished:
-                            break
-                            
-                        case .failure(.notFound):
-                            self?.flagImageView.image = Asset.Placeholder.w25FlagError
-                            break
-                            
-                        case .failure(.network(let error)),
-                             .failure(.unknown(let error)):
+                    receiveCompletion: { completion in
+                        if case let .failure(error) = completion {
                             print(error)
-                            break
                         }
                     },
-                    receiveValue: { [weak self] imageData in
-                        self?.flagImageView.image = UIImage(data: imageData)
+                    receiveValue: { [weak self] image in
+                        guard let self = self else { return }
+                        
+                        guard let image = image else {
+                            self.flagImageView.image = Asset.Placeholder.w25FlagError
+                            return
+                        }
+                        
+                        self.flagImageView.image = UIImage(data: image)
                     })
         }
     }

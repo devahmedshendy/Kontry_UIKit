@@ -32,3 +32,9 @@ extension String {
         return !isEmpty
     }
 }
+
+extension NSSet {
+    func toArray<T>(of type: T.Type) -> [T] {
+        return self.allObjects as! [T]
+    }
+}

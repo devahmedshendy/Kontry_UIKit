@@ -17,20 +17,14 @@ final class FlagPediaAPI {
         case w640
     }
     
-    enum Error: Swift.Error {
-        case notFound(error: String)
-        case network(error: String)
-        case unknown(error: String)
-    }
-    
     //MARK: - Static Properties
     
     static let baseURL = "https://flagcdn.com"
     
     //MARK: - Static Methods
     
-    static func createURL(countryCode: String, size: FlagPediaAPI.Size) -> URL {
-        let urlString = "\(baseURL)/\(size)/\(countryCode).png"
+    static func createURL(alpha2Code: String, size: FlagPediaAPI.Size) -> URL {
+        let urlString = "\(baseURL)/\(size)/\(alpha2Code).png"
 
         return URL(string: urlString)!
     }

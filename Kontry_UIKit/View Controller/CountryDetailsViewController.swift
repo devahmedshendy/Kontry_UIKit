@@ -99,7 +99,7 @@ class CountryDetailsViewController: UIViewController {
         showLoadingView()
         
         vm
-            .loadCountryDetails(of: country?.code ?? "")
+            .loadCountryDetails(of: country?.alpha2Code ?? "")
             .delay(for: .milliseconds(250), scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
             .sink(
@@ -108,21 +108,18 @@ class CountryDetailsViewController: UIViewController {
                     
                     self.hideLoadingView()
                     
-                    switch completion {
-                    case .finished:
-                        break
-                        
-                    case .failure(.unknown(let error)):
-                        print(error)
-                        break
-                    
-                    default:
+                    if case let .failure(error) = completion {
                         self.showRetryErrorView()
-                        break
+                        print(error)
                     }
                 },
                 receiveValue: { [weak self] countryDetails in
                     guard let self = self else { return }
+                    
+                    guard let countryDetails = countryDetails else {
+                        self.showRetryErrorView()
+                        return
+                    }
                     
                     self.mapView.setRegion(countryDetails.mapRegion, animated: false)
                     

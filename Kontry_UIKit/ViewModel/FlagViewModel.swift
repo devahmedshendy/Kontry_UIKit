@@ -18,13 +18,13 @@ final class FlagViewModel {
     
     //MARK: - Actions
     
-    func get40WidthFlag(countryCode: String) -> AnyPublisher<Data, FlagPediaAPI.Error> {
+    func get40WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         return repository
-            .getCountryFlag(countryCode: countryCode, size: .w40)
+            .get40WidthFlag(for: alpha2Code, size: .w40)
     }
     
-    func get160WidthFlag(countryCode: String) -> AnyPublisher<Data, FlagPediaAPI.Error> {
+    func get160WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         return repository
-            .getCountryFlag(countryCode: countryCode, size: .w160)
+            .get160WidthFlag(for: alpha2Code, size: .w160)
     }
 }

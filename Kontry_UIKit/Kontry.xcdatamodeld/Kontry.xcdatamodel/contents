@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19H1419" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Currency" representedClassName="CurrencyEntity" syncable="YES">
+        <attribute name="code" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="details" maxCount="1" deletionRule="Nullify" destinationEntity="Details" inverseName="currencies" inverseEntity="Details"/>
+    </entity>
+    <entity name="Details" representedClassName="DetailsEntity" syncable="YES">
+        <attribute name="alpha2_code" attributeType="String"/>
+        <attribute name="capital" optional="YES" attributeType="String"/>
+        <attribute name="demonym" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="latitude" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="longitude" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="population" attributeType="Integer 64" usesScalarValueType="YES"/>
+        <attribute name="region" attributeType="String"/>
+        <relationship name="currencies" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Currency" inverseName="details" inverseEntity="Currency"/>
+        <relationship name="languages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Language" inverseName="details" inverseEntity="Language"/>
+    </entity>
+    <entity name="Flag" representedClassName="FlagEntity" syncable="YES">
+        <attribute name="alpha2_code" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="image" attributeType="Binary"/>
+    </entity>
+    <entity name="Language" representedClassName="LanguageEntity" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <relationship name="details" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Details" inverseName="languages" inverseEntity="Details"/>
+    </entity>
+    <elements>
+        <element name="Currency" positionX="251.8671875" positionY="184.203125" width="128" height="88"/>
+        <element name="Details" positionX="72.13671875" positionY="131.48828125" width="113.97265625" height="208"/>
+        <element name="Flag" positionX="-206.01171875" positionY="31.00390625" width="128" height="88"/>
+        <element name="Language" positionX="0" positionY="162" width="128" height="88"/>
+    </elements>
+</model>

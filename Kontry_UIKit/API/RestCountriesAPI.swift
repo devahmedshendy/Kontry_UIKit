@@ -14,14 +14,7 @@ struct RestCountriesAPI {
     enum Endpoint: String {
         case all = "/all"
         case name = "/name"
-        case alpha = "/alpha"
-    }
-    
-    enum Error: Swift.Error {
-        case notFound(error: String)
-        case network(error: String)
-        case decoding(error: String)
-        case unknown(error: String)
+        case alphaCode = "/alpha"
     }
     
     //MARK: - Static Properties
@@ -31,16 +24,14 @@ struct RestCountriesAPI {
     
     //MARK: - Helper Methods
     
-    static func createAllURL() -> URL {
-        return createURL(endpoint: Endpoint.all)
+    static func createURLForAll(params: [String:String] = [:]) -> URL {
+        return createURL(endpoint: Endpoint.all, params: params)
     }
     
-    static func createSearchByAlphaURL(_ alpha: String) -> URL {
-        return createURL(endpoint: Endpoint.alpha, queryPath: [alpha])
-    }
-    
-    static func createNameURL(params: [String :String] = [:]) -> URL {
-        return createURL(endpoint: Endpoint.name, params: params)
+    static func createURLForSearch(by endpoint: Endpoint,
+                                   value: String,
+                                   params: [String:String] = [:]) -> URL {
+        return createURL(endpoint: endpoint, queryPath: [value], params: params)
     }
     
     private static func createURL(endpoint: Endpoint,

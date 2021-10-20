@@ -20,4 +20,6 @@ final class Constant {
         static let mapViewHeight = "mapViewHeight"
         static let mapViewWidth = "mapViewWidth"
     }
+    
+    static let UNAVAILABLE = "UNAVAILABLE"
 }

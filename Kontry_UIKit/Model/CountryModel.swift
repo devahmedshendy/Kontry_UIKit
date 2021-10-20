@@ -7,31 +7,41 @@
 
 import Foundation
 
-class Country: Codable {
+final class Country: Codable {
+    
+    //MARK: - Static Properties
+    
+    static var fields: String {
+        return Country.CodingKeys.allCases
+            .map { $0.rawValue }
+            .joined(separator: ",")
+    }
     
     //MARK: - Properties
     
     let name: String
-    let code: String
+    let alpha2Code: String
     
-    init(name: String, code: String) {
-        self.name = name
-        self.code = code
-    }
-    
-    enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey, CaseIterable {
         case name
-        case code = "alpha2Code"
+        case alpha2Code
     }
     
+    //MARK: - init Methods
+    
+    init(name: String, alpha2Code: String) {
+        self.name = name
+        self.alpha2Code = alpha2Code
+    }
 }
 
 extension Country: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
+        hasher.combine(alpha2Code)
     }
     
     static func ==(lhs: Country, rhs: Country) -> Bool {
-        return lhs.name == rhs.name
+        return lhs.name == rhs.name && lhs.alpha2Code == rhs.alpha2Code
     }
 }

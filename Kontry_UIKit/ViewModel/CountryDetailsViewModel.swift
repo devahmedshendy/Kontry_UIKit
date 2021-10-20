@@ -20,9 +20,9 @@ final class CountryDetailsViewModel {
     
     //MARK: - ACTIONS
     
-    func loadCountryDetails(of code: String) -> AnyPublisher<CountryDetails, RestCountriesAPI.Error> {
+    func loadCountryDetails(of code: String) -> AnyPublisher<CountryDetails?, Error> {
         return repository
-            .fetchCountryDetails(of: code)
+            .getCountryDetails(for: code)
             .eraseToAnyPublisher()
     }
 }

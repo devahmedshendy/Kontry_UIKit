@@ -20,7 +20,7 @@ final class CountryListViewModel {
         
     //MARK: - ACTIONS
     
-    func loadCountries() -> AnyPublisher<[Country], RestCountriesAPI.Error>  {
-        return repository.fetchCountryList()
+    func loadCountries() -> AnyPublisher<[Country], KontryError>  {
+        return repository.getCountryList()
     }
 }

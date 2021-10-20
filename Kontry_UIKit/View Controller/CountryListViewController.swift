@@ -78,14 +78,7 @@ class CountryListViewController: UIViewController {
                     
                     self.hideLoadingView()
                     
-                    switch completion {
-                    case .finished:
-                        break
-                        
-                    case .failure(.notFound(let error)),
-                         .failure(.network(let error)),
-                         .failure(.decoding(let error)),
-                         .failure(.unknown(let error)):
+                    if case let .failure(error) = completion {
                         self.showRetryErrorView()
                         print(error)
                     }

@@ -18,26 +18,21 @@ final class DetailFlagImageView: RatioConstrainedImageView {
     var country: Country? {
         didSet {
             subscription = vm
-                .get160WidthFlag(countryCode: country!.code)
+                .get160WidthFlag(alpha2Code: country!.alpha2Code)
                 .receive(on: RunLoop.main)
                 .sink(
-                    receiveCompletion: { [weak self] completion in
-                        switch completion {
-                        case .finished:
-                            break
-                            
-                        case .failure(.notFound):
-                            self?.image = Asset.Placeholder.w200FlagError
-                            break
-                            
-                        case .failure(.network(let error)),
-                             .failure(.unknown(let error)):
+                    receiveCompletion: { completion in
+                        if case let .failure(error) = completion {
                             print(error)
-                            break
                         }
                     },
-                    receiveValue: { [weak self] imageData in
-                        self?.image = UIImage(data: imageData)
+                    receiveValue: { [weak self] image in
+                        guard let image = image else {
+                            self?.image = Asset.Placeholder.w200FlagError
+                            return
+                        }
+                        
+                        self?.image = UIImage(data: image)
                     })
         }
     }

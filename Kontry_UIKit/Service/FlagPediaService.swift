@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class FlagPediaService {
     
@@ -26,10 +27,22 @@ final class FlagPediaService {
     
     //MARK: - Methods
     
-    func getCountryFlag(countryCode: String, size: FlagPediaAPI.Size, enableCache: Bool = false) -> URLSession.DataTaskPublisher {
-        let url = FlagPediaAPI.createURL(countryCode: countryCode.lowercased(), size: size)
+    func getCountryFlag(for alpha2Code: String, size: FlagPediaAPI.Size, enableCache: Bool) -> AnyPublisher<Data?, Error> {
+        let url = FlagPediaAPI.createURL(alpha2Code: alpha2Code.lowercased(), size: size)
         let session = enableCache ? ephemeralSession : defaultSession
         
-        return session.dataTaskPublisher(for: url)
+        return session
+            .dataTaskPublisher(for: url)
+            .tryMap { result -> Data? in
+                let response = result.response as! HTTPURLResponse
+                let statusCode = response.statusCode
+
+                if statusCode == 404 {
+                    return nil
+                }
+
+                return result.data
+            }
+            .eraseToAnyPublisher()
     }
 }
