@@ -8,6 +8,8 @@
 import Foundation
 import MapKit
 
+// Responsibility:
+// A data model represents data to be displayed in CountryDetailsViewController.
 struct CountryDetails: Codable {
     
     //MARK: - Types
@@ -54,6 +56,8 @@ struct CountryDetails: Codable {
     
     //MARK: - init Methods
     
+    // It was best to decode manually so I can decide early and clearly what
+    // to do for unexpected fields (ex: country with no coordinates or no capital).
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
@@ -127,6 +131,8 @@ extension CountryDetails: Equatable {
         return lhs.name == rhs.name
     }
 }
+
+//MARK: - Initialize From Different Models/Componenets
 
 extension CountryDetails {
     init(from detailsEntity: DetailsEntity) {

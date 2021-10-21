@@ -8,6 +8,9 @@
 import Foundation
 import Combine
 
+// Responsibility:
+// It handles network-related tasks for RestCountries API.
+// It does it using URLSession.
 final class RestCountriesService {
     
     //MARK: - Properties

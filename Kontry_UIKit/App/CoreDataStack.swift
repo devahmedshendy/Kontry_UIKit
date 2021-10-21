@@ -9,6 +9,9 @@ import Foundation
 import CoreData
 import Combine
 
+// Responsibility:
+// It sets up coredata stack components like persistent container,
+//   persistent store, managed object context, etc.
 final class CoreDataStack {
     
     //MARK: - Static Properties
@@ -46,34 +49,5 @@ final class CoreDataStack {
     //MARK: - init Mehtods
     
     private init() {
-    }
-    
-    //MARK: - Helper Methods
-    
-    func saveContext() {
-        guard managedContext.hasChanges else { return }
-        
-        do {
-            try managedContext.save()
-            
-        } catch let error as NSError {
-            print("COREDATA_ERROR: \(error.userInfo)")
-        }
-    }
-    
-    func fetchSingleItem<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<T?, CoreDataError> {
-        return Future<T?, CoreDataError> {
-            [weak self] promise in
-            guard let self = self else { return }
-            
-            do {
-                let result = try self.managedContext.fetch(fetchRequest)
-                promise(.success(result.first))
-                
-            } catch let error as NSError {
-                promise(.failure(CoreDataError(error: error)))
-            }
-        }
-        .eraseToAnyPublisher()
     }
 }

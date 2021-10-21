@@ -7,6 +7,8 @@
 
 import UIKit
 
+// Responsibility:
+// It holds all project assets as constants in organized classes.
 final class Asset {
     class Placeholder {
         static let w25Flag = UIImage(named: "w25_flag")!

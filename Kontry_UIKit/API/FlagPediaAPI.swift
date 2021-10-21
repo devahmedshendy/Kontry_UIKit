@@ -7,6 +7,9 @@
 
 import Foundation
 
+// Responsibility:
+// It encapsulates info related to FlagPediaAPI API (ex: baseURL, endpoints).
+// It helps create URL objects for other services to use to communicate with the API.
 final class FlagPediaAPI {
     
     enum Size: String {

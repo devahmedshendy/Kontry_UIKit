@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+// Responsibility:
+// A viewmodel that handles data/state required by any view displaying a country flag (ex: DetailsFlagImageView).
 final class FlagViewModel {
     
     //MARK: - Properties
@@ -20,11 +22,11 @@ final class FlagViewModel {
     
     func get40WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         return repository
-            .get40WidthFlag(for: alpha2Code, size: .w40)
+            .get40pxWidthFlag(for: alpha2Code)
     }
     
     func get160WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         return repository
-            .get160WidthFlag(for: alpha2Code, size: .w160)
+            .get160pxWidthFlag(for: alpha2Code, size: .w160)
     }
 }

@@ -8,6 +8,9 @@
 import Foundation
 import Combine
 
+// Responsibility:
+// It handles network-related tasks for FlagPedia API.
+// It does it using URLSession.
 final class FlagPediaService {
     
     //MARK: - Properties

@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+// Responsibility:
+// A viewmodel that handles data/state required by the views from CountryListViewController.
 final class CountryListViewModel {
     
     //MARK: - Properties

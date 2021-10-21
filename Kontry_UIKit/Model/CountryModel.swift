@@ -7,6 +7,8 @@
 
 import Foundation
 
+// Responsibility:
+// A data model represents data to be displayed in CountryListViewController.
 final class Country: Codable {
     
     //MARK: - Static Properties

@@ -9,6 +9,9 @@ import Foundation
 import CoreData
 import Combine
 
+// Responsibility:
+// It handle tasks that require storing data for offline use.
+// It does it using CoreData.
 final class CoreDataService {
     
     //MARK: - Properties
@@ -23,7 +26,7 @@ final class CoreDataService {
         fetchRequest.fetchLimit = 1
         fetchRequest.predicate = NSPredicate(format: "%K =[c] %@", #keyPath(FlagEntity.alpha2_code), alpha2Code)
         
-        return coreDataStack.fetchSingleItem(fetchRequest)
+        return fetchSingleItem(fetchRequest)
     }
     
     func createFlagEntity(for alpha2Code: String, _ image: Data) {
@@ -32,7 +35,7 @@ final class CoreDataService {
         newFlagEntity.alpha2_code = alpha2Code
         newFlagEntity.image = image
         
-        coreDataStack.saveContext()
+        saveContext()
     }
     
     func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, CoreDataError> {
@@ -41,7 +44,7 @@ final class CoreDataService {
         fetchRequest.fetchLimit = 1
         fetchRequest.predicate = NSPredicate(format: "%K =[c] %@", #keyPath(DetailsEntity.alpha2_code), alpha2Code)
         
-        return coreDataStack.fetchSingleItem(fetchRequest)
+        return fetchSingleItem(fetchRequest)
     }
     
     func createDetailsEntity(from countryDetails: CountryDetails) {
@@ -81,6 +84,35 @@ final class CoreDataService {
             )
         )
         
-        coreDataStack.saveContext()
+        saveContext()
+    }
+    
+    //MARK: - Helper Methods
+    
+    private func saveContext() {
+        guard coreDataStack.managedContext.hasChanges else { return }
+        
+        do {
+            try coreDataStack.managedContext.save()
+            
+        } catch let error as NSError {
+            print("COREDATA_ERROR: \(error.userInfo)")
+        }
+    }
+    
+    private func fetchSingleItem<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<T?, CoreDataError> {
+        return Future<T?, CoreDataError> {
+            [weak self] promise in
+            guard let self = self else { return }
+            
+            do {
+                let result = try self.coreDataStack.managedContext.fetch(fetchRequest)
+                promise(.success(result.first))
+                
+            } catch let error as NSError {
+                promise(.failure(CoreDataError(error: error)))
+            }
+        }
+        .eraseToAnyPublisher()
     }
 }

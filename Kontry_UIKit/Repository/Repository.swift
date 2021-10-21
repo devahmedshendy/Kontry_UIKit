@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+// Responsibility:
+// It communicates with services for local/remote CRUD operations on data models.
 final class Repository {
     
     //MARK: - Properties
@@ -19,6 +21,8 @@ final class Repository {
     
     //MARK: - Methods
     
+    // Get list of countries from RestCountries API.
+    // It restrict requested fields to the fields of Country data mdoel.
     func getCountryList() -> AnyPublisher<[Country], KontryError> {
         return restCountriesService
             .getAllCountries(fields: Country.fields)
@@ -38,9 +42,12 @@ final class Repository {
             .eraseToAnyPublisher()
     }
     
-    func get40WidthFlag(for alpha2Code: String, size: FlagPediaAPI.Size) -> AnyPublisher<Data?, KontryError> {
+    // Get Flag image from FlagPedia API.
+    // It only request flag of width size 40px.
+    func get40pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
+        
         return self.flagPediaService
-            .getCountryFlag(for: alpha2Code, size: size, enableCache: true)
+            .getCountryFlag(for: alpha2Code, size: FlagPediaAPI.Size.w40, enableCache: true)
             .mapError { error -> KontryError in
                 switch error {
                 case is URLError:
@@ -53,7 +60,14 @@ final class Repository {
             .eraseToAnyPublisher()
     }
     
-    func get160WidthFlag(for alpha2Code: String, size: FlagPediaAPI.Size) -> AnyPublisher<Data?, KontryError> {
+    // Get Flag image from CoreData or FlagPedia API.
+    // It only request flag of width size 160px.
+    //
+    // This flag is required to be saved in coredata for future requests.
+    // It first checks if it is already in coredata then return it,
+    //   otherwise request it from the API, then save it in coredata.
+    func get160pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
+        
         return coreDataService
             .findFlagEntity(for: alpha2Code)
             .mapError { $0 as Error }
@@ -67,7 +81,7 @@ final class Repository {
                 }
                 
                 return self.flagPediaService
-                    .getCountryFlag(for: alpha2Code, size: size, enableCache: false)
+                    .getCountryFlag(for: alpha2Code, size: FlagPediaAPI.Size.w160, enableCache: false)
                     .map { image -> Data? in
                         guard let image = image else { return nil }
 
@@ -89,6 +103,11 @@ final class Repository {
             .eraseToAnyPublisher()
     }
     
+    // Get more country details using alpha2Code from CoreData or RestCounties API.
+    //
+    // These country details are required to be saved in coredata for future requests.
+    // It first checks if it is already in coredata then return it,
+    //   otherwise request it from the API, then save it in coredata.
     func getCountryDetails(for alpha2Code: String) -> AnyPublisher<CountryDetails?, Error> {
         
         return findCountryDetailsLocally(for: alpha2Code)
@@ -134,7 +153,11 @@ final class Repository {
             .eraseToAnyPublisher()
     }
     
+    //MARK: - Helper Methods
+    
+    // Get country details using alpha2Code from CoreData.
     private func findCountryDetailsLocally(for alpha2Code: String) -> AnyPublisher<CountryDetails?, Error> {
+        
         return coreDataService
             .findDetailsEntity(for: alpha2Code)
             .mapError { $0 as Error }
@@ -146,11 +169,13 @@ final class Repository {
             .eraseToAnyPublisher()
     }
     
+    // Get country details using alpha2Code from RestCountries API.
+    // It restrict requested fields to the fields of CountryDetails data mdoel.
     private func findCountryDetailsRemotely(for alpha2Code: String) -> AnyPublisher<CountryDetails?, Error> {
+        
         return restCountriesService
             .getCountryByAlpha2Code(alpha2Code, fields: CountryDetails.fields)
             .mapError { $0 as Error }
-            // We decode the data - if any - returned by remote api
             .flatMap { [weak self] data -> AnyPublisher<CountryDetails?, Error> in
                 guard let self = self else { return Empty().eraseToAnyPublisher() }
                 
