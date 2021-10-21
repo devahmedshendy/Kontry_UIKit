@@ -14,7 +14,6 @@
 		640AD1EE26FCC9A100410895 /* RetryErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640AD1ED26FCC9A100410895 /* RetryErrorView.swift */; };
 		640AD1F126FCC9B100410895 /* RetryErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 640AD1F026FCC9B100410895 /* RetryErrorView.xib */; };
 		640AD1F426FCE76A00410895 /* Delgates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640AD1F326FCE76A00410895 /* Delgates.swift */; };
-		644B8A8D26C2BFE40078C727 /* RestCountriesAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644B8A8C26C2BFE40078C727 /* RestCountriesAPI.swift */; };
 		644B8A9426C2C2F20078C727 /* CountryDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644B8A9326C2C2F20078C727 /* CountryDetailsModel.swift */; };
 		644B8A9926C2D4EA0078C727 /* CountryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644B8A9826C2D4EA0078C727 /* CountryListViewModel.swift */; };
 		644B8A9F26C2F3170078C727 /* CountryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644B8A9E26C2F3170078C727 /* CountryModel.swift */; };
@@ -29,7 +28,9 @@
 		647E0EAF2711C66400628198 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647E0EAE2711C66400628198 /* Errors.swift */; };
 		6493404F26EF98B80090F826 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6493404E26EF98B80090F826 /* Enums.swift */; };
 		6493405326F0A1BC0090F826 /* FlagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6493405226F0A1BC0090F826 /* FlagViewModel.swift */; };
-		64C894A72703CB9600920812 /* FlagPediaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C894A62703CB9600920812 /* FlagPediaAPI.swift */; };
+		6496025527217B9B00261A42 /* CountriesApiServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6496025427217B9B00261A42 /* CountriesApiServiceProtocol.swift */; };
+		6496025927217DD200261A42 /* PersistenceServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6496025827217DD200261A42 /* PersistenceServiceProtocol.swift */; };
+		6496025D2721846500261A42 /* FlagsApiServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6496025C2721846500261A42 /* FlagsApiServiceProtocol.swift */; };
 		64C894AA2703CD0500920812 /* FlagPediaService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C894A92703CD0500920812 /* FlagPediaService.swift */; };
 		64C894D62704D25100920812 /* RatioConstrainedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C894D52704D25100920812 /* RatioConstrainedImageView.swift */; };
 		64C894D92704DCB800920812 /* DetailFlagImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C894D82704DCB800920812 /* DetailFlagImageView.swift */; };
@@ -61,7 +62,6 @@
 		640AD1ED26FCC9A100410895 /* RetryErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryErrorView.swift; sourceTree = "<group>"; };
 		640AD1F026FCC9B100410895 /* RetryErrorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RetryErrorView.xib; sourceTree = "<group>"; };
 		640AD1F326FCE76A00410895 /* Delgates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delgates.swift; sourceTree = "<group>"; };
-		644B8A8C26C2BFE40078C727 /* RestCountriesAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestCountriesAPI.swift; sourceTree = "<group>"; };
 		644B8A9326C2C2F20078C727 /* CountryDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDetailsModel.swift; sourceTree = "<group>"; };
 		644B8A9826C2D4EA0078C727 /* CountryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryListViewModel.swift; sourceTree = "<group>"; };
 		644B8A9E26C2F3170078C727 /* CountryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryModel.swift; sourceTree = "<group>"; };
@@ -76,7 +76,9 @@
 		647E0EAE2711C66400628198 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		6493404E26EF98B80090F826 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		6493405226F0A1BC0090F826 /* FlagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagViewModel.swift; sourceTree = "<group>"; };
-		64C894A62703CB9600920812 /* FlagPediaAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagPediaAPI.swift; sourceTree = "<group>"; };
+		6496025427217B9B00261A42 /* CountriesApiServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountriesApiServiceProtocol.swift; sourceTree = "<group>"; };
+		6496025827217DD200261A42 /* PersistenceServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceServiceProtocol.swift; sourceTree = "<group>"; };
+		6496025C2721846500261A42 /* FlagsApiServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagsApiServiceProtocol.swift; sourceTree = "<group>"; };
 		64C894A92703CD0500920812 /* FlagPediaService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagPediaService.swift; sourceTree = "<group>"; };
 		64C894D52704D25100920812 /* RatioConstrainedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatioConstrainedImageView.swift; sourceTree = "<group>"; };
 		64C894D82704DCB800920812 /* DetailFlagImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailFlagImageView.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 				6455089D26D44D3D00796628 /* RestCountriesService.swift */,
 				64C894A92703CD0500920812 /* FlagPediaService.swift */,
 				647E0E8727117A2B00628198 /* CoreDataService.swift */,
+				6496025227217B6800261A42 /* Protocols */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -180,13 +183,14 @@
 			path = Repository;
 			sourceTree = "<group>";
 		};
-		64C894FA270680CE00920812 /* API */ = {
+		6496025227217B6800261A42 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				644B8A8C26C2BFE40078C727 /* RestCountriesAPI.swift */,
-				64C894A62703CB9600920812 /* FlagPediaAPI.swift */,
+				6496025427217B9B00261A42 /* CountriesApiServiceProtocol.swift */,
+				6496025C2721846500261A42 /* FlagsApiServiceProtocol.swift */,
+				6496025827217DD200261A42 /* PersistenceServiceProtocol.swift */,
 			);
-			path = API;
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		64DD417026B12CD9007E5135 = {
@@ -223,7 +227,6 @@
 				644B8A9726C2D4D70078C727 /* ViewModel */,
 				647D37FD26D288D40050C292 /* Repository */,
 				6455089C26D44CFA00796628 /* Service */,
-				64C894FA270680CE00920812 /* API */,
 				644B8A8B26C2BFC00078C727 /* Utility */,
 				64DD418226B12CD9007E5135 /* Main.storyboard */,
 				64DD418526B12CDC007E5135 /* Assets.xcassets */,
@@ -327,6 +330,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				64D9CEBA271FF54900A53794 /* LanguageEntity+CoreDataProperties.swift in Sources */,
+				6496025D2721846500261A42 /* FlagsApiServiceProtocol.swift in Sources */,
 				647E0E8827117A2B00628198 /* CoreDataService.swift in Sources */,
 				644B8A9F26C2F3170078C727 /* CountryModel.swift in Sources */,
 				644B8A9426C2C2F20078C727 /* CountryDetailsModel.swift in Sources */,
@@ -348,14 +352,14 @@
 				64C894E52706492C00920812 /* DetailView.swift in Sources */,
 				640AD1DD26FC830600410895 /* CountryDetailsViewModel.swift in Sources */,
 				640AD1E526FCA53700410895 /* LoadingView.swift in Sources */,
-				64C894A72703CB9600920812 /* FlagPediaAPI.swift in Sources */,
 				647D37FB26D288CF0050C292 /* Repository.swift in Sources */,
 				640AD1F426FCE76A00410895 /* Delgates.swift in Sources */,
-				644B8A8D26C2BFE40078C727 /* RestCountriesAPI.swift in Sources */,
+				6496025927217DD200261A42 /* PersistenceServiceProtocol.swift in Sources */,
 				6493404F26EF98B80090F826 /* Enums.swift in Sources */,
 				64DD417D26B12CD9007E5135 /* AppDelegate.swift in Sources */,
 				64DD417F26B12CD9007E5135 /* SceneDelegate.swift in Sources */,
 				64C894E827064ECD00920812 /* Assets.swift in Sources */,
+				6496025527217B9B00261A42 /* CountriesApiServiceProtocol.swift in Sources */,
 				644B8A9926C2D4EA0078C727 /* CountryListViewModel.swift in Sources */,
 				6493405326F0A1BC0090F826 /* FlagViewModel.swift in Sources */,
 				640AD1DA26FC82E400410895 /* CountryDetailsViewController.swift in Sources */,

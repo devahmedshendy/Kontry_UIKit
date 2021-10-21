@@ -27,6 +27,6 @@ final class FlagViewModel {
     
     func get160WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         return repository
-            .get160pxWidthFlag(for: alpha2Code, size: .w160)
+            .get160pxWidthFlag(for: alpha2Code)
     }
 }

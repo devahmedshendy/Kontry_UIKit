@@ -12,7 +12,7 @@ import Combine
 // Responsibility:
 // It handle tasks that require storing data for offline use.
 // It does it using CoreData.
-final class CoreDataService {
+final class CoreDataService: PersistenceServiceProtocol {
     
     //MARK: - Properties
     

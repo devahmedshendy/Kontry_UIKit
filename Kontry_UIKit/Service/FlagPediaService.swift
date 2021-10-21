@@ -11,7 +11,7 @@ import Combine
 // Responsibility:
 // It handles network-related tasks for FlagPedia API.
 // It does it using URLSession.
-final class FlagPediaService {
+final class FlagPediaService: FlagsApiServiceProtocol {
     
     //MARK: - Properties
     
@@ -30,13 +30,13 @@ final class FlagPediaService {
     
     //MARK: - Methods
     
-    func getCountryFlag(for alpha2Code: String, size: FlagPediaAPI.Size, enableCache: Bool) -> AnyPublisher<Data?, Error> {
-        let url = FlagPediaAPI.createURL(alpha2Code: alpha2Code.lowercased(), size: size)
+    func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, URLError> {
+        let url = ApiUtility.createURL(alpha2Code: field.lowercased(), size: size)
         let session = enableCache ? ephemeralSession : defaultSession
         
         return session
             .dataTaskPublisher(for: url)
-            .tryMap { result -> Data? in
+            .map { result -> Data? in
                 let response = result.response as! HTTPURLResponse
                 let statusCode = response.statusCode
 
@@ -48,4 +48,26 @@ final class FlagPediaService {
             }
             .eraseToAnyPublisher()
     }
+}
+
+
+extension FlagPediaService {
+    // Responsibility:
+    // It encapsulates info related to RestCountries API (ex: baseURL, endpoints).
+    // It helps create URL objects to use to communicate with the API.
+    private struct ApiUtility {
+        
+        //MARK: - Static Properties
+        
+        static let baseURL = "https://flagcdn.com"
+        
+        //MARK: - Static Methods
+        
+        static func createURL(alpha2Code: String, size: FlagSize) -> URL {
+            let urlString = "\(baseURL)/\(size)/\(alpha2Code).png"
+
+            return URL(string: urlString)!
+        }
+    }
+
 }

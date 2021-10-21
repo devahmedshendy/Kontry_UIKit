@@ -15,17 +15,17 @@ final class Repository {
     //MARK: - Properties
     
     private lazy var jsonDecoder = JSONDecoder()
-    private lazy var restCountriesService = RestCountriesService()
-    private lazy var flagPediaService = FlagPediaService()
-    private lazy var coreDataService = CoreDataService()
+    private lazy var countriesApiService: CountriesApiServiceProtocol = RestCountriesService()
+    private lazy var flagsApiService: FlagsApiServiceProtocol = FlagPediaService()
+    private lazy var persistenceService: PersistenceServiceProtocol = CoreDataService()
     
     //MARK: - Methods
     
     // Get list of countries from RestCountries API.
     // It restrict requested fields to the fields of Country data mdoel.
     func getCountryList() -> AnyPublisher<[Country], KontryError> {
-        return restCountriesService
-            .getAllCountries(fields: Country.fields)
+        return countriesApiService
+            .getAll(params: [ "fields": Country.fields])
             .decode(type: [Country].self, decoder: jsonDecoder)
             .mapError { error -> KontryError in
                 switch error {
@@ -46,16 +46,10 @@ final class Repository {
     // It only request flag of width size 40px.
     func get40pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         
-        return self.flagPediaService
-            .getCountryFlag(for: alpha2Code, size: FlagPediaAPI.Size.w40, enableCache: true)
+        return self.flagsApiService
+            .get(by: alpha2Code, size: FlagSize.w40, enableCache: true)
             .mapError { error -> KontryError in
-                switch error {
-                case is URLError:
-                    return .network(description: error.localizedDescription)
-
-                default:
-                    return error as? KontryError ?? .unknown(description: error.localizedDescription)
-                }
+                return .network(description: error.localizedDescription)
             }
             .eraseToAnyPublisher()
     }
@@ -68,7 +62,7 @@ final class Repository {
     //   otherwise request it from the API, then save it in coredata.
     func get160pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         
-        return coreDataService
+        return persistenceService
             .findFlagEntity(for: alpha2Code)
             .mapError { $0 as Error }
             .flatMap { [weak self] flag -> AnyPublisher<Data?, Error> in
@@ -80,15 +74,16 @@ final class Repository {
                         .eraseToAnyPublisher()
                 }
                 
-                return self.flagPediaService
-                    .getCountryFlag(for: alpha2Code, size: FlagPediaAPI.Size.w160, enableCache: false)
+                return self.flagsApiService
+                    .get(by: alpha2Code, size: FlagSize.w160, enableCache: false)
                     .map { image -> Data? in
                         guard let image = image else { return nil }
 
-                        self.coreDataService.createFlagEntity(for: alpha2Code, image)
+                        self.persistenceService.createFlagEntity(for: alpha2Code, image)
 
                         return image
                     }
+                    .mapError { $0 as Error }
                     .eraseToAnyPublisher()
             }
             .mapError { error -> KontryError in
@@ -128,7 +123,7 @@ final class Repository {
                         guard let self = self else { return countryDetails }
                         
                         if let countryDetails = countryDetails {
-                            self.coreDataService.createDetailsEntity(from: countryDetails)
+                            self.persistenceService.createDetailsEntity(from: countryDetails)
                         }
                         
                         return countryDetails
@@ -158,7 +153,7 @@ final class Repository {
     // Get country details using alpha2Code from CoreData.
     private func findCountryDetailsLocally(for alpha2Code: String) -> AnyPublisher<CountryDetails?, Error> {
         
-        return coreDataService
+        return persistenceService
             .findDetailsEntity(for: alpha2Code)
             .mapError { $0 as Error }
             .map { details -> CountryDetails? in
@@ -173,8 +168,8 @@ final class Repository {
     // It restrict requested fields to the fields of CountryDetails data mdoel.
     private func findCountryDetailsRemotely(for alpha2Code: String) -> AnyPublisher<CountryDetails?, Error> {
         
-        return restCountriesService
-            .getCountryByAlpha2Code(alpha2Code, fields: CountryDetails.fields)
+        return countriesApiService
+            .getOne(by: .alpha2Code, fieldValue: alpha2Code, params: [ "fields": CountryDetails.fields])
             .mapError { $0 as Error }
             .flatMap { [weak self] data -> AnyPublisher<CountryDetails?, Error> in
                 guard let self = self else { return Empty().eraseToAnyPublisher() }
