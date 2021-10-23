@@ -128,25 +128,6 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
-		644B8A9226C2C2E00078C727 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				644B8A9E26C2F3170078C727 /* CountryModel.swift */,
-				644B8A9326C2C2F20078C727 /* CountryDetailsModel.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		644B8A9726C2D4D70078C727 /* ViewModel */ = {
-			isa = PBXGroup;
-			children = (
-				644B8A9826C2D4EA0078C727 /* CountryListViewModel.swift */,
-				640AD1DC26FC830600410895 /* CountryDetailsViewModel.swift */,
-				6493405226F0A1BC0090F826 /* FlagViewModel.swift */,
-			);
-			path = ViewModel;
-			sourceTree = "<group>";
-		};
 		6455089C26D44CFA00796628 /* Service */ = {
 			isa = PBXGroup;
 			children = (
@@ -158,29 +139,130 @@
 			path = Service;
 			sourceTree = "<group>";
 		};
-		645508A126D73FD200796628 /* View */ = {
-			isa = PBXGroup;
-			children = (
-				645508A226D7400800796628 /* CountryCell.swift */,
-				645508A326D7400800796628 /* CountryCell.xib */,
-				640AD1E426FCA53700410895 /* LoadingView.swift */,
-				640AD1E726FCA54A00410895 /* LoadingView.xib */,
-				640AD1ED26FCC9A100410895 /* RetryErrorView.swift */,
-				640AD1F026FCC9B100410895 /* RetryErrorView.xib */,
-				64E9ECAE2700B52700578960 /* NavigationBarView.swift */,
-				64C894D52704D25100920812 /* RatioConstrainedImageView.swift */,
-				64C894D82704DCB800920812 /* DetailFlagImageView.swift */,
-				64C894E42706492C00920812 /* DetailView.swift */,
-			);
-			path = View;
-			sourceTree = "<group>";
-		};
 		647D37FD26D288D40050C292 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
 				647D37FA26D288CF0050C292 /* Repository.swift */,
 			);
 			path = Repository;
+			sourceTree = "<group>";
+		};
+		647FCB0227244A1400402522 /* CountryList */ = {
+			isa = PBXGroup;
+			children = (
+				647FCB1027244B3700402522 /* ViewController */,
+				647FCB0427244A3100402522 /* Model */,
+				647FCB0327244A2400402522 /* View */,
+				647FCB0527244A3800402522 /* ViewModel */,
+			);
+			path = CountryList;
+			sourceTree = "<group>";
+		};
+		647FCB0327244A2400402522 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				645508A226D7400800796628 /* CountryCell.swift */,
+				645508A326D7400800796628 /* CountryCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		647FCB0427244A3100402522 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				644B8A9E26C2F3170078C727 /* CountryModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		647FCB0527244A3800402522 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				644B8A9826C2D4EA0078C727 /* CountryListViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		647FCB0827244A8600402522 /* CountryDetails */ = {
+			isa = PBXGroup;
+			children = (
+				647FCB1127244B4500402522 /* ViewController */,
+				647FCB0927244A9200402522 /* Model */,
+				647FCB0A27244A9600402522 /* View */,
+				647FCB0B27244A9B00402522 /* ViewModel */,
+			);
+			path = CountryDetails;
+			sourceTree = "<group>";
+		};
+		647FCB0927244A9200402522 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				640AD1DC26FC830600410895 /* CountryDetailsViewModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		647FCB0A27244A9600402522 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				64C894D82704DCB800920812 /* DetailFlagImageView.swift */,
+				64C894E42706492C00920812 /* DetailView.swift */,
+				64E9ECAE2700B52700578960 /* NavigationBarView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		647FCB0B27244A9B00402522 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				644B8A9326C2C2F20078C727 /* CountryDetailsModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		647FCB0C27244ACC00402522 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				647FCB0F27244AE100402522 /* View */,
+				647FCB0D27244AD600402522 /* ViewModel */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		647FCB0D27244AD600402522 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				6493405226F0A1BC0090F826 /* FlagViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		647FCB0F27244AE100402522 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				640AD1E426FCA53700410895 /* LoadingView.swift */,
+				640AD1E726FCA54A00410895 /* LoadingView.xib */,
+				640AD1ED26FCC9A100410895 /* RetryErrorView.swift */,
+				640AD1F026FCC9B100410895 /* RetryErrorView.xib */,
+				64C894D52704D25100920812 /* RatioConstrainedImageView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		647FCB1027244B3700402522 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				64DD419426B12F77007E5135 /* CountryListViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		647FCB1127244B4500402522 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				640AD1D926FC82E400410895 /* CountryDetailsViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 		6496025227217B6800261A42 /* Protocols */ = {
@@ -221,10 +303,9 @@
 			isa = PBXGroup;
 			children = (
 				64DD419126B12D7E007E5135 /* App */,
-				64DD419226B12D87007E5135 /* View Controller */,
-				644B8A9226C2C2E00078C727 /* Model */,
-				645508A126D73FD200796628 /* View */,
-				644B8A9726C2D4D70078C727 /* ViewModel */,
+				647FCB0227244A1400402522 /* CountryList */,
+				647FCB0827244A8600402522 /* CountryDetails */,
+				647FCB0C27244ACC00402522 /* Common */,
 				647D37FD26D288D40050C292 /* Repository */,
 				6455089C26D44CFA00796628 /* Service */,
 				644B8A8B26C2BFC00078C727 /* Utility */,
@@ -245,15 +326,6 @@
 				647E0E842711788B00628198 /* CoreDataStack.swift */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		64DD419226B12D87007E5135 /* View Controller */ = {
-			isa = PBXGroup;
-			children = (
-				64DD419426B12F77007E5135 /* CountryListViewController.swift */,
-				640AD1D926FC82E400410895 /* CountryDetailsViewController.swift */,
-			);
-			path = "View Controller";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
