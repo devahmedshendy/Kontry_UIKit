@@ -13,13 +13,12 @@ class CountryCell: UICollectionViewCell {
     //MARK: - Static Properties
     
     static let reuseIdentifier = String(describing: CountryCell.self)
-    static let nibName = String(describing: CountryCell.self)
     
-    //MARK: - Outlets
+    //MARK: - Views
     
-    @IBOutlet weak var cellBackgroundView: UIView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var flagImageView: UIImageView!
+    private(set) var cellBackgroundView: UIView!
+    private(set) var nameLabel: UILabel!
+    private(set) var flagImageView: UIImageView!
     
     //MARK: - Properties
     
@@ -28,180 +27,115 @@ class CountryCell: UICollectionViewCell {
     
     var country: CountryDto? {
         didSet {
-            nameLabel.text = country!.name
-            
-            subscription = vm
-                .get40WidthFlag(alpha2Code: country!.alpha2Code)
-                .receive(on: RunLoop.main)
-                .sink(
-                    receiveCompletion: { completion in
-                        if case let .failure(error) = completion {
-                            print(error)
-                        }
-                    },
-                    receiveValue: { [weak self] image in
-                        guard let self = self else { return }
-                        
-                        guard let image = image else {
-                            self.flagImageView.image = Asset.Placeholder.w25FlagError
-                            return
-                        }
-                        
-                        self.flagImageView.image = UIImage(data: image)
-                    })
+            loadFlag()
         }
     }
     
-    //MARK: - Life Cycle Methods
+    //MARK: - init Methods
     
-    // The outlets have been hooked up and ready for use
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
-        configureCellUI()
-        configureCellConstraints()
+        initView()
     }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        initView()
+    }
+    
+    private func initView() {
+        cellBackgroundView = UIView()
+        flagImageView = UIImageView(image: Asset.Placeholder.w25Flag)
+        nameLabel = UILabel()
+        
+        addSubview(cellBackgroundView)
+        addSubview(flagImageView)
+        addSubview(nameLabel)
+        
+        configureBackgroundView()
+        configureFlagImageView()
+        configureNameLabel()
+    }
+    
+    //MARK: - Life Cycle Methods
     
     override func prepareForReuse() {
         flagImageView.image = Asset.Placeholder.w25Flag
         subscription?.cancel()
         subscription = nil
     }
+    
+    //MARK: - Helper Methods
+    
+    private func loadFlag() {
+        nameLabel.text = country!.name
+        
+        subscription = vm
+            .get40WidthFlag(alpha2Code: country!.alpha2Code)
+            .receive(on: RunLoop.main)
+            .sink(
+                receiveCompletion: { completion in
+                    if case let .failure(error) = completion {
+                        print(error)
+                    }
+                },
+                receiveValue: { [weak self] image in
+                    guard let self = self else { return }
+                    
+                    guard let image = image else {
+                        self.flagImageView.image = Asset.Placeholder.w25FlagError
+                        return
+                    }
+                    
+                    self.flagImageView.image = UIImage(data: image)
+                })
+    }
 }
 
-//MARK: - Cell UI Methods
+//MARK: - Views Configuration
 
 extension CountryCell {
-    private func configureCellUI() {
-        flagImageView.image = Asset.Placeholder.w25Flag
-        
+    private func configureBackgroundView() {
         cellBackgroundView.layer.borderWidth = CGFloat(1)
         cellBackgroundView.layer.borderColor = Asset.Color.countryCellBorder.cgColor
         cellBackgroundView.layer.cornerRadius = CGFloat(10)
-    }
-}
-
-//MARK: - Cell Constraints Methods
-
-extension CountryCell {
-    
-    private func configureCellConstraints() {
-        configureCellBackgroundViewConstraints()
-        configureFlagImageViewConstraints()
-        configureNameLabelConstraints()
-    }
-    
-    private func configureCellBackgroundViewConstraints() {
+        
+        // Constraint Configuration
         cellBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        
-        var constraints = [NSLayoutConstraint]()
-        
-        // cellBackgroundView.top = contentView.top
-        constraints += [
-            NSLayoutConstraint.init(
-                item: cellBackgroundView!, attribute: .top,
-                relatedBy: .equal,
-                toItem: contentView, attribute: .top,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // cellBackgroundView.bottom = contentView.bottom
-        constraints += [
-            NSLayoutConstraint.init(
-                item: cellBackgroundView!, attribute: .bottom,
-                relatedBy: .equal,
-                toItem: contentView, attribute: .bottom,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // cellBackgroundView.leading = contentView.leading
-        constraints += [
-            NSLayoutConstraint.init(
-                item: cellBackgroundView!, attribute: .leading,
-                relatedBy: .equal,
-                toItem: contentView, attribute: .leading,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // cellBackgroundView.trailing = contentView.trailing
-        constraints += [
-            NSLayoutConstraint.init(
-                item: cellBackgroundView!, attribute: .trailing,
-                relatedBy: .equal,
-                toItem: contentView, attribute: .trailing,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
+                
+        NSLayoutConstraint.activate([
+            cellBackgroundView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            cellBackgroundView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            cellBackgroundView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            cellBackgroundView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
     }
     
-    private func configureFlagImageViewConstraints() {
+    private func configureFlagImageView() {
+        flagImageView.contentMode = .scaleAspectFit
+        flagImageView.clipsToBounds = true
+        
+        // Constraint Configuration
         flagImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        var constraints = [NSLayoutConstraint]()
-        
-        // flagImageView.top = contentView.top
-        constraints += [
-            NSLayoutConstraint.init(
-                item: flagImageView!, attribute: .top,
-                relatedBy: .equal,
-                toItem: contentView, attribute: .top,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // flagImageView.bottom = contentView.bottom
-        constraints += [
-            NSLayoutConstraint.init(
-                item: flagImageView!, attribute: .bottom,
-                relatedBy: .equal,
-                toItem: contentView, attribute: .bottom,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // flagImageView.leading = contentView.leading + 10
-        constraints += [
-            NSLayoutConstraint.init(
-                item: flagImageView!, attribute: .leading,
-                relatedBy: .equal,
-                toItem: contentView, attribute: .leading,
-                multiplier: 1.0, constant: 15.0
-            )
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate([
+            flagImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15.0),
+            flagImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            flagImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            flagImageView.widthAnchor.constraint(equalToConstant: 30.0)
+        ])
     }
     
-    private func configureNameLabelConstraints() {
+    private func configureNameLabel() {
+        
+        // Constraint Configuration
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        var constraints = [NSLayoutConstraint]()
-        
-        // countryNameLabel.centerY = flagImageView.centerY
-        constraints += [
-            NSLayoutConstraint.init(
-                item: nameLabel!, attribute: .centerY,
-                relatedBy: .equal,
-                toItem: flagImageView, attribute: .centerY,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // countryNameLabel.leading = flagImageView.trailing + 10
-        constraints += [
-            NSLayoutConstraint.init(
-                item: nameLabel!, attribute: .leading,
-                relatedBy: .equal,
-                toItem: flagImageView, attribute: .trailing,
-                multiplier: 1.0, constant: 10.0
-            )
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate([
+            nameLabel.leadingAnchor.constraint(equalTo: flagImageView.trailingAnchor, constant: 10.0),
+            nameLabel.centerYAnchor.constraint(equalTo: flagImageView.centerYAnchor)
+        ])
     }
 }

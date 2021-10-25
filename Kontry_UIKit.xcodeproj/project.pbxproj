@@ -19,7 +19,6 @@
 		644B8A9F26C2F3170078C727 /* CountryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644B8A9E26C2F3170078C727 /* CountryModel.swift */; };
 		6455089E26D44D3D00796628 /* RestCountriesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455089D26D44D3D00796628 /* RestCountriesService.swift */; };
 		645508A426D7400800796628 /* CountryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645508A226D7400800796628 /* CountryCell.swift */; };
-		645508A526D7400800796628 /* CountryCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 645508A326D7400800796628 /* CountryCell.xib */; };
 		646D395F26F915D7009E3BD4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646D395E26F915D7009E3BD4 /* Extensions.swift */; };
 		647E0E852711788B00628198 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647E0E842711788B00628198 /* CoreDataStack.swift */; };
 		647E0E8827117A2B00628198 /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647E0E8727117A2B00628198 /* CoreDataService.swift */; };
@@ -73,7 +72,6 @@
 		644B8A9E26C2F3170078C727 /* CountryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryModel.swift; sourceTree = "<group>"; };
 		6455089D26D44D3D00796628 /* RestCountriesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestCountriesService.swift; sourceTree = "<group>"; };
 		645508A226D7400800796628 /* CountryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryCell.swift; sourceTree = "<group>"; };
-		645508A326D7400800796628 /* CountryCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountryCell.xib; sourceTree = "<group>"; };
 		646D395E26F915D7009E3BD4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		647E0E842711788B00628198 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		647E0E8727117A2B00628198 /* CoreDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
@@ -176,7 +174,6 @@
 			isa = PBXGroup;
 			children = (
 				645508A226D7400800796628 /* CountryCell.swift */,
-				645508A326D7400800796628 /* CountryCell.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -411,7 +408,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				645508A526D7400800796628 /* CountryCell.xib in Resources */,
 				64DD418926B12CDC007E5135 /* LaunchScreen.storyboard in Resources */,
 				640AD1F126FCC9B100410895 /* RetryErrorView.xib in Resources */,
 				64DD418626B12CDC007E5135 /* Assets.xcassets in Resources */,

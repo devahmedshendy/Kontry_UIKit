@@ -267,7 +267,7 @@ extension CountryListViewController {
         collectionView.delegate = self
         
         collectionView.register(
-            UINib(nibName: CountryCell.nibName, bundle: nil),
+            CountryCell.self,
             forCellWithReuseIdentifier: CountryCell.reuseIdentifier
         )
         

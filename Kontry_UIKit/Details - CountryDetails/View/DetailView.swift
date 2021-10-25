@@ -65,7 +65,7 @@ extension DetailView {
             iconImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             iconImage.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             iconImage.widthAnchor.constraint(equalToConstant: 16),
-            iconImage.heightAnchor.constraint(equalTo: iconImage.heightAnchor)
+            iconImage.heightAnchor.constraint(equalTo: iconImage.widthAnchor) // TODO: Do we need this?
         ])
     }
     
