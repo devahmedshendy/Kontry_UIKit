@@ -12,7 +12,7 @@ class CountryListViewController: UIViewController {
     
     //MARK: - Views
     
-    @IBOutlet weak var collectionView: UICollectionView!
+    var collectionView: UICollectionView!
     var loadingView: LoadingView!
     var retryErrorView: RetryErrorView!
     
@@ -31,6 +31,10 @@ class CountryListViewController: UIViewController {
         // Create some custom views, and show/add them later when needed
         loadingView = LoadingView()
         retryErrorView = RetryErrorView()
+        
+        collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout.init())
+        
+        view.addSubview(collectionView)
     }
 
     override func viewDidLoad() {
@@ -38,21 +42,7 @@ class CountryListViewController: UIViewController {
         
         configureNavigationBar()
         configureCollectionView()
-        
-        vm = CountryListViewModel(
-            countriesRepository: CountriesRepository(
-                countriesApiService: RestCountriesService(),
-                persistenceService: CoreDataService()
-            ),
-            loadingViewModel: VisibilityViewModel(),
-            retryErrorViewModel: VisibilityViewModel()
-        )
-        
-        bindToCountriesPublisher()
-        bindToLoadingPublisher()
-        bindToRetryErrorPublisher()
-
-        vm.loadCountries()
+        configureViewModel()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,7 +58,24 @@ class CountryListViewController: UIViewController {
         configureCollectionViewLayout()
     }
     
-    //MARK: - DataBinding Methods
+    //MARK: - ViewModel & DataBinding Methods
+    
+    private func configureViewModel() {
+        vm = CountryListViewModel(
+            countriesRepository: CountriesRepository(
+                countriesApiService: RestCountriesService(),
+                persistenceService: CoreDataService()
+            ),
+            loadingViewModel: VisibilityViewModel(),
+            retryErrorViewModel: VisibilityViewModel()
+        )
+        
+        bindToCountriesPublisher()
+        bindToLoadingPublisher()
+        bindToRetryErrorPublisher()
+
+        vm.loadCountries()
+    }
     
     private func bindToCountriesPublisher() {
         vm.countriesPublisher
@@ -167,6 +174,7 @@ extension CountryListViewController {
 extension CountryListViewController {
     
     private func configureCollectionView() {
+        collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = UIColor.clear
         collectionView.delegate = self
         

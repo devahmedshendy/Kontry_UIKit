@@ -67,23 +67,10 @@ class CountryDetailsViewController: UIViewController {
         configureMapView()
         configureFlagImageView()
         configureDetailStack()
+        
         configureDynamicConstraints()
         
-        vm = CountryDetailsViewModel(
-            alpha2Code: country!.alpha2Code,
-            countriesRepository: CountriesRepository(
-                countriesApiService: RestCountriesService(),
-                persistenceService: CoreDataService()
-            ),
-            loadingViewModel: VisibilityViewModel(),
-            retryErrorViewModel: VisibilityViewModel()
-        )
-        
-        bindToDetailsPublisher()
-        bindToLoadingPublisher()
-        bindToRetryErrorPublisher()
-        
-        vm.loadDetails()
+        configureViewModel()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,7 +94,25 @@ class CountryDetailsViewController: UIViewController {
         }
     }
     
-    //MARK: - DataBinding Methods
+    //MARK: - ViewModel & DataBinding Methods
+    
+    private func configureViewModel() {
+        vm = CountryDetailsViewModel(
+            alpha2Code: country!.alpha2Code,
+            countriesRepository: CountriesRepository(
+                countriesApiService: RestCountriesService(),
+                persistenceService: CoreDataService()
+            ),
+            loadingViewModel: VisibilityViewModel(),
+            retryErrorViewModel: VisibilityViewModel()
+        )
+        
+        bindToDetailsPublisher()
+        bindToLoadingPublisher()
+        bindToRetryErrorPublisher()
+        
+        vm.loadDetails()
+    }
     
     private func bindToDetailsPublisher() {
         vm.detailsPublisher

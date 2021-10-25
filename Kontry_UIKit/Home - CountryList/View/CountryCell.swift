@@ -68,8 +68,6 @@ class CountryCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         flagImageView.image = Asset.Placeholder.w25Flag
-        subscription?.cancel()
-        subscription = nil
     }
     
     //MARK: - ViewModel & DataBinding Methods
