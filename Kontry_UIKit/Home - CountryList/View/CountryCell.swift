@@ -16,9 +16,9 @@ class CountryCell: UICollectionViewCell {
     
     //MARK: - Views
     
-    let cellBackgroundView = UIView()
-    let nameLabel = UILabel()
-    let flagImageView = UIImageView(image: Asset.Placeholder.w25Flag)
+    private(set) var cellBackgroundView: UIView!
+    private(set) var nameLabel: UILabel!
+    private(set) var flagImageView: UIImageView!
     
     //MARK: - Properties
     
@@ -46,6 +46,12 @@ class CountryCell: UICollectionViewCell {
     }
     
     private func initView() {
+        // Create The SubViews
+        cellBackgroundView = UIView()
+        nameLabel = UILabel()
+        flagImageView = UIImageView(image: Asset.Placeholder.w25Flag)
+        
+        // Add The SubViews
         addSubview(cellBackgroundView)
         addSubview(flagImageView)
         addSubview(nameLabel)

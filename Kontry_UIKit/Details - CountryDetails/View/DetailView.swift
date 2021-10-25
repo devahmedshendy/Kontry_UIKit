@@ -11,9 +11,9 @@ class DetailView: UIView {
     
     //MARK: - Views
     
-    let iconImage = UIImageView()
-    let titleLabel = UILabel()
-    let valueLabel = UILabel()
+    private(set) var iconImage: UIImageView!
+    private(set) var titleLabel: UILabel!
+    private(set) var valueLabel: UILabel!
 
     //MARK: - Init Methods
     
@@ -30,6 +30,12 @@ class DetailView: UIView {
     }
     
     private func initView() {
+        // Create The SubViews
+        iconImage = UIImageView()
+        titleLabel = UILabel()
+        valueLabel = UILabel()
+        
+        // Add The SubViews
         addSubview(iconImage)
         addSubview(titleLabel)
         addSubview(valueLabel)

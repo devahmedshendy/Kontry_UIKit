@@ -11,16 +11,8 @@ class NavigationBarView: UIView {
     
     //MARK: - Views
     
-    let titleLabel: UILabel = UILabel()
-    let backButton = UIImageView(
-        image: UIImage(
-            systemName: "chevron.backward.circle.fill",
-            withConfiguration: UIImage.SymbolConfiguration(
-                font: UIFont.systemFont(ofSize: 20),
-                scale: UIImage.SymbolScale.large
-            )
-        )
-    )
+    private(set) var titleLabel: UILabel!
+    private(set) var backButton: UIImageView!
     
     //MARK: - Properties
     
@@ -41,6 +33,19 @@ class NavigationBarView: UIView {
     }
 
     private func initView() {
+        // Create The SubViews
+        titleLabel = UILabel()
+        backButton = UIImageView(
+            image: UIImage(
+                systemName: "chevron.backward.circle.fill",
+                withConfiguration: UIImage.SymbolConfiguration(
+                    font: UIFont.systemFont(ofSize: 20),
+                    scale: UIImage.SymbolScale.large
+                )
+            )
+        )
+        
+        // Add The Subviews
         addSubview(titleLabel)
         addSubview(backButton)
         
