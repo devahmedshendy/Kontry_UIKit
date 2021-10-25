@@ -33,4 +33,9 @@ final class Asset {
         static let currency = UIImage(named: "currency")!
         static let language = UIImage(named: "language")!
     }
+    
+    class Image {
+        static let loading = UIImage(named: "loading")
+        static let retryError = UIImage(named: "retry_error")
+    }
 }

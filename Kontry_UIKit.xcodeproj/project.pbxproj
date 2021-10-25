@@ -10,9 +10,7 @@
 		640AD1DA26FC82E400410895 /* CountryDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640AD1D926FC82E400410895 /* CountryDetailsViewController.swift */; };
 		640AD1DD26FC830600410895 /* CountryDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640AD1DC26FC830600410895 /* CountryDetailsViewModel.swift */; };
 		640AD1E526FCA53700410895 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640AD1E426FCA53700410895 /* LoadingView.swift */; };
-		640AD1E826FCA54A00410895 /* LoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 640AD1E726FCA54A00410895 /* LoadingView.xib */; };
 		640AD1EE26FCC9A100410895 /* RetryErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640AD1ED26FCC9A100410895 /* RetryErrorView.swift */; };
-		640AD1F126FCC9B100410895 /* RetryErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 640AD1F026FCC9B100410895 /* RetryErrorView.xib */; };
 		640AD1F426FCE76A00410895 /* Delgates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640AD1F326FCE76A00410895 /* Delgates.swift */; };
 		644B8A9426C2C2F20078C727 /* CountryDetailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644B8A9326C2C2F20078C727 /* CountryDetailsModel.swift */; };
 		644B8A9926C2D4EA0078C727 /* CountryListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644B8A9826C2D4EA0078C727 /* CountryListViewModel.swift */; };
@@ -63,9 +61,7 @@
 		640AD1D926FC82E400410895 /* CountryDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDetailsViewController.swift; sourceTree = "<group>"; };
 		640AD1DC26FC830600410895 /* CountryDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDetailsViewModel.swift; sourceTree = "<group>"; };
 		640AD1E426FCA53700410895 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
-		640AD1E726FCA54A00410895 /* LoadingView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingView.xib; sourceTree = "<group>"; };
 		640AD1ED26FCC9A100410895 /* RetryErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryErrorView.swift; sourceTree = "<group>"; };
-		640AD1F026FCC9B100410895 /* RetryErrorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RetryErrorView.xib; sourceTree = "<group>"; };
 		640AD1F326FCE76A00410895 /* Delgates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delgates.swift; sourceTree = "<group>"; };
 		644B8A9326C2C2F20078C727 /* CountryDetailsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryDetailsModel.swift; sourceTree = "<group>"; };
 		644B8A9826C2D4EA0078C727 /* CountryListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountryListViewModel.swift; sourceTree = "<group>"; };
@@ -255,9 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				640AD1E426FCA53700410895 /* LoadingView.swift */,
-				640AD1E726FCA54A00410895 /* LoadingView.xib */,
 				640AD1ED26FCC9A100410895 /* RetryErrorView.swift */,
-				640AD1F026FCC9B100410895 /* RetryErrorView.xib */,
 				64C894D52704D25100920812 /* RatioConstrainedImageView.swift */,
 			);
 			path = View;
@@ -409,10 +403,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				64DD418926B12CDC007E5135 /* LaunchScreen.storyboard in Resources */,
-				640AD1F126FCC9B100410895 /* RetryErrorView.xib in Resources */,
 				64DD418626B12CDC007E5135 /* Assets.xcassets in Resources */,
 				64DD418426B12CD9007E5135 /* Main.storyboard in Resources */,
-				640AD1E826FCA54A00410895 /* LoadingView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

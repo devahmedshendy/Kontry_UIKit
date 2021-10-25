@@ -31,7 +31,7 @@ class DetailView: UIView {
     
     private func initView() {
         // Create The SubViews
-        iconImage = UIImageView()
+        iconImage = UIImageView(image: UIImage(named: "Value"))
         titleLabel = UILabel()
         valueLabel = UILabel()
         
@@ -66,8 +66,7 @@ extension DetailView {
             iconImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
             iconImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             iconImage.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
-            iconImage.widthAnchor.constraint(equalToConstant: 16),
-            iconImage.heightAnchor.constraint(equalTo: iconImage.widthAnchor) // TODO: Do we need this?
+            iconImage.widthAnchor.constraint(equalToConstant: 16)
         ])
     }
     
@@ -87,7 +86,6 @@ extension DetailView {
     }
     
     private func configureValueLabel() {
-        iconImage.image = UIImage(named: "Value")
         valueLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         valueLabel.textColor = Asset.Color.text
         

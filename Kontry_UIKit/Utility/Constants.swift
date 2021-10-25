@@ -21,6 +21,12 @@ final class Constant {
         static let mapViewWidth = "mapViewWidth"
     }
     
+    class Text {
+        static let loading = "loading"
+        static let retry = "retry"
+        static let failedToFetchContent = "Failed to fetch content"
+    }
+    
     static let UNAVAILABLE = "UNAVAILABLE"
     static let BAD_ALPHA2CODE = "BAD_ALPHA2CODE"
 }

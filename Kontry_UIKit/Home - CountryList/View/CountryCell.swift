@@ -131,6 +131,9 @@ extension CountryCell {
     }
     
     private func configureNameLabel() {
+        nameLabel.font = UIFont(name: "Helvetica Neue", size: 16.0)
+        nameLabel.numberOfLines = 1
+        nameLabel.textColor = Asset.Color.text
         
         // Constraint Configuration
         nameLabel.translatesAutoresizingMaskIntoConstraints = false

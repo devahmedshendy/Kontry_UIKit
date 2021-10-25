@@ -12,21 +12,18 @@ import UIKit
  */
 class RetryErrorView: UIView {
     
-    //MARK: - Static Properties
+    //MARK: - Views
     
-    static let nibName = String(describing: RetryErrorView.self)
-    
-    //MARK: - Outlets
-    
-    @IBOutlet weak var stackview: UIStackView!
-    @IBOutlet weak var retryButton: UIButton!
-    @IBOutlet weak var retryIndicator: UIActivityIndicatorView!
+    private(set) var stackview: UIStackView!
+    private(set) var imageView: UIImageView!
+    private(set) var label: UILabel!
+    private(set) var button: UIButton!
     
     //MARK: - Properties
     
     var delegate: RetryErrorViewDelegate?
     
-    //MARK: - Inits
+    //MARK: - init Methods
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,165 +38,75 @@ class RetryErrorView: UIView {
     }
 
     private func initView() {
-        loadNib()
-        enlargeRetryIndicator()
-        configureConstraints()
-    }
-    
-    private func loadNib() {
-        guard let nib = Bundle.main.loadNibNamed(RetryErrorView.nibName, owner: self, options: nil),
-              let nibView = nib.first as? UIView
-        else {
-            fatalError("Couldn't load RetryErrorView from nib!")
-        }
+        // Create The SubViews
+        imageView = UIImageView(image: Asset.Image.retryError)
+        label = UILabel()
+        button = UIButton()
+        stackview = UIStackView(arrangedSubviews: [imageView, label])
         
-        nibView.frame = self.bounds
+        // Add The SubViews
+        addSubview(stackview)
+        addSubview(button)
         
-        addSubview(nibView)
-    }
-    
-    private func enlargeRetryIndicator() {
-        retryIndicator.transform = CGAffineTransform(scaleX: 2, y: 2)
-    }
-    
-    //MARK: - Outlet Actions
-    
-    @IBAction func doRetry(_ sender: UIButton) {
-        delegate?.didPressRetry()
+        configureStackView()
+        configureImageView()
+        configureLabel()
+        configureButton()
     }
 }
 
-//MARK: - Constraints Configuration
+//MARK: - Views Configuration
 
 extension RetryErrorView {
-    
-    func configureConstraints() {
-        configureStackViewConstraints()
-        configureRetryButtonConstraints()
-        configureRetryIndicatorConstraints()
-    }
-    
-    private func configureStackViewConstraints() {
+    private func configureStackView() {
+        stackview.axis = .vertical
+        stackview.alignment = .fill
+        stackview.distribution = .fill
+        stackview.spacing = 0
+        
+        // Constraint Configuration
         stackview.translatesAutoresizingMaskIntoConstraints = false
         
-        var constraints = [NSLayoutConstraint]()
-        
-        // stackview.centerX = self.centerX
-        constraints += [
-            NSLayoutConstraint.init(
-                item: stackview!, attribute: .centerX,
-                relatedBy: .equal,
-                toItem: self, attribute: .centerX,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // stackview.centerY = self.centerY
-        constraints += [
-            NSLayoutConstraint.init(
-                item: stackview!, attribute: .centerY,
-                relatedBy: .equal,
-                toItem: self, attribute: .centerY,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate([
+            stackview.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            stackview.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        ])
     }
     
-    private func configureRetryButtonConstraints() {
-        retryButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        var constraints = [NSLayoutConstraint]()
-        
-        // retryButton.top = stackview.bottom
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryButton!, attribute: .top,
-                relatedBy: .equal,
-                toItem: stackview!, attribute: .bottom,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // retryButton.bottom = self.bottom
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryButton!, attribute: .bottom,
-                relatedBy: .equal,
-                toItem: self, attribute: .bottom,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // retryButton.leading = stackview.leading
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryButton!, attribute: .leading,
-                relatedBy: .equal,
-                toItem: stackview!, attribute: .leading,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // retryButton.trailing = stackview.trailing
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryButton!, attribute: .trailing,
-                relatedBy: .equal,
-                toItem: stackview!, attribute: .trailing,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-//        // retryButton.width = intrinsicWidth
-//        constraints += [
-//            NSLayoutConstraint.init(
-//                item: retryButton!, attribute: .width,
-//                relatedBy: .equal,
-//                toItem: nil, attribute: .notAnAttribute,
-//                multiplier: 1.0, constant: retryButton.intrinsicContentSize.width
-//            )
-//        ]
-//
-//        // retryButton.height = intrinsicHeight
-//        constraints += [
-//            NSLayoutConstraint.init(
-//                item: retryButton!, attribute: .height,
-//                relatedBy: .equal,
-//                toItem: nil, attribute: .notAnAttribute,
-//                multiplier: 1.0, constant: retryButton.intrinsicContentSize.height
-//            )
-//        ]
-        
-        NSLayoutConstraint.activate(constraints)
+    private func configureImageView() {
+        imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
     }
     
-    private func configureRetryIndicatorConstraints() {
-        retryIndicator.translatesAutoresizingMaskIntoConstraints = false
+    private func configureLabel() {
+        label.text = Constant.Text.failedToFetchContent.uppercased()
+        label.textColor = Asset.Color.text
+        label.textAlignment = .natural
+        label.font = UIFont(name: "Helvetica Neue", size: 14.0)
+        label.numberOfLines = 1
+    }
+    
+    private func configureButton() {
+        button.setTitle(Constant.Text.retry.uppercased(), for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.titleLabel?.textAlignment = .natural
+        button.titleLabel?.font = UIFont(name: "Helvetica Neue", size: 18.0)
+        button.titleLabel?.numberOfLines = 1
+
+        button.addTarget(self, action: #selector(doRetry(_:)), for: .touchUpInside)
         
-        var constraints = [NSLayoutConstraint]()
+        // Constraint Configuration
+        button.translatesAutoresizingMaskIntoConstraints = false
         
-        // retryIndicator.centerX = retryButton.centerX
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryIndicator!, attribute: .centerX,
-                relatedBy: .equal,
-                toItem: retryButton!, attribute: .centerX,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // retryIndicator.centerY = retryButton.centerY
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryIndicator!, attribute: .centerY,
-                relatedBy: .equal,
-                toItem: retryButton!, attribute: .centerY,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: stackview.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: stackview.trailingAnchor),
+            button.topAnchor.constraint(equalTo: stackview.bottomAnchor),
+            button.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        ])
+    }
+    
+    @objc func doRetry(_ sender: UIButton) {
+        delegate?.didPressRetry()
     }
 }

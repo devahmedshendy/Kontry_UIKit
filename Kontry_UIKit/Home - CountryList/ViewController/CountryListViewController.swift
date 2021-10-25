@@ -16,14 +16,14 @@ class CountryListViewController: UIViewController {
     var loadingView: LoadingView!
     var retryErrorView: RetryErrorView!
     
-    //MARK: - Stored Properties
+    //MARK: - Properties
     
     private var vm: CountryListViewModel!
     private var subscriptions = Set<AnyCancellable>()
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, CountryDto>!
         
-    //MARK: - Lifecycle
+    //MARK: - Lifecycle Methods
     
     override func loadView() {
         super.loadView()
@@ -75,7 +75,7 @@ class CountryListViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
-    //MARK: - Helper Methods
+    //MARK: - DataBinding Methods
     
     private func bindToCountriesPublisher() {
         vm.countriesPublisher
@@ -114,6 +114,8 @@ class CountryListViewController: UIViewController {
             .store(in: &subscriptions)
     }
     
+    //MARK: - Helper Methods
+    
     private func showLoadingView() {
         view.addSubview(loadingView)
         configureLoadingView()
@@ -133,130 +135,34 @@ class CountryListViewController: UIViewController {
     }
 }
 
-//MARK: - LoadingView Configuration
+//MARK: - Views Configuration
 
 extension CountryListViewController {
     
     private func configureLoadingView() {
-        configureLoadingViewConstraints()
-    }
-    
-    private func configureLoadingViewConstraints() {
+        // Constraint Configuration
         loadingView.translatesAutoresizingMaskIntoConstraints = false
         
-        var constraints = [NSLayoutConstraint]()
-        
-        // loadingView.centerY = superview.centerY
-        constraints += [
-            NSLayoutConstraint.init(
-                item: loadingView!, attribute: .centerY,
-                relatedBy: .equal,
-                toItem: view, attribute: .centerY,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // loadingView.centerX = superview.centerX
-        constraints += [
-            NSLayoutConstraint.init(
-                item: loadingView!, attribute: .centerX,
-                relatedBy: .equal,
-                toItem: view, attribute: .centerX,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // loadingView.width = 50
-        constraints += [
-            NSLayoutConstraint.init(
-                item: loadingView!, attribute: .width,
-                relatedBy: .equal,
-                toItem: nil, attribute: .notAnAttribute,
-                multiplier: 1.0, constant: 50.0
-            )
-        ]
-        
-        // loadingView.width = loadingView.height
-        constraints += [
-            NSLayoutConstraint.init(
-                item: loadingView!, attribute: .width,
-                relatedBy: .equal,
-                toItem: loadingView!, attribute: .height,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate([
+            loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
     }
-    
-}
-
-//MARK: - RetryErrorView Configuration
-
-extension CountryListViewController {
     
     private func configureRetryErrorView() {
         retryErrorView.delegate = self
         
-        configureRetryErrorViewConstraints()
-    }
-    
-    private func configureRetryErrorViewConstraints() {
+        // Constraint Configuration
         retryErrorView.translatesAutoresizingMaskIntoConstraints = false
         
-        var constraints = [NSLayoutConstraint]()
-        
-        // retryErrorView.top = superview.top
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryErrorView!, attribute: .top,
-                relatedBy: .equal,
-                toItem: view, attribute: .top,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // retryErrorView.bottom = superview.bottom
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryErrorView!, attribute: .bottom,
-                relatedBy: .equal,
-                toItem: view, attribute: .bottom,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // retryErrorView.leading = superview.leading
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryErrorView!, attribute: .leading,
-                relatedBy: .equal,
-                toItem: view, attribute: .leading,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // retryErrorView.trailing = superview.trailing
-        constraints += [
-            NSLayoutConstraint.init(
-                item: retryErrorView!, attribute: .trailing,
-                relatedBy: .equal,
-                toItem: view, attribute: .trailing,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
+        NSLayoutConstraint.activate([
+            retryErrorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            retryErrorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            retryErrorView.topAnchor.constraint(equalTo: view.topAnchor),
+            retryErrorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
 }
-
-//MARK: - RetryErrorViewDelegate
-extension CountryListViewController: RetryErrorViewDelegate {
-    func didPressRetry() {
-        vm.retryLoadCountries()
-    }
-}
-
 
 //MARK: - CollectionView Configuration
 
@@ -271,7 +177,17 @@ extension CountryListViewController {
             forCellWithReuseIdentifier: CountryCell.reuseIdentifier
         )
         
-        configureCollectionViewConstraints()
+        // Constraint Configuration
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20.0),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20.0),
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        
         configureCollectionViewLayout()
         configureCollectionViewDataSource()
     }
@@ -321,58 +237,18 @@ extension CountryListViewController {
         snapshot.appendItems(list, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
-    
-    private func configureCollectionViewConstraints() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        var constraints = [NSLayoutConstraint]()
-        
-        // collectionView.top = view.safeAreaLayoutGuide.top
-        constraints += [
-            NSLayoutConstraint.init(
-                item: collectionView!, attribute: .top,
-                relatedBy: .equal,
-                toItem: view.safeAreaLayoutGuide, attribute: .top,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // collectionView.bottom = view.safeAreaLayoutGuide.bottom
-        constraints += [
-            NSLayoutConstraint.init(
-                item: collectionView!, attribute: .bottom,
-                relatedBy: .equal,
-                toItem: view.safeAreaLayoutGuide, attribute: .bottom,
-                multiplier: 1.0, constant: 0.0
-            )
-        ]
-        
-        // collectionView.leading = view.safeAreaLayoutGuide.leading + 20
-        constraints += [
-            NSLayoutConstraint.init(
-                item: collectionView!, attribute: .leading,
-                relatedBy: .equal,
-                toItem: view.safeAreaLayoutGuide, attribute: .leading,
-                multiplier: 1.0, constant: 20.0
-            )
-        ]
-        
-        // collectionView.trailing = view.safeAreaLayoutGuide.trailing - 20
-        constraints += [
-            NSLayoutConstraint.init(
-                item: collectionView!, attribute: .trailing,
-                relatedBy: .equal,
-                toItem: view.safeAreaLayoutGuide, attribute: .trailing,
-                multiplier: 1.0, constant: -20.0
-            )
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
+}
+
+//MARK: - Delegates
+
+//MARK: RetryErrorViewDelegate
+extension CountryListViewController: RetryErrorViewDelegate {
+    func didPressRetry() {
+        vm.retryLoadCountries()
     }
 }
 
-//MARK: - Collection View Delegate
-
+//MARK: UICollectionViewDelegate
 extension CountryListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = collectionView.cellForItem(at: indexPath) as? CountryCell,

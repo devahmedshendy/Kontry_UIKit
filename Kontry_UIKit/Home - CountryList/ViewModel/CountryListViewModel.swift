@@ -56,7 +56,7 @@ final class CountryListViewModel {
             .sink(
                 receiveCompletion: { [weak self] completion in
                     self?.loading.hide()
-                    
+
                     if case let .failure(error) = completion {
                         self?.retryError.show()
                         print(error)
