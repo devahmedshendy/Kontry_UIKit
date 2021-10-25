@@ -55,7 +55,7 @@ class NavigationBarView: UIView {
     }
 }
 
-//MARK: - Outlets/Views Configuration
+//MARK: - Views Configuration
 
 extension NavigationBarView {
     

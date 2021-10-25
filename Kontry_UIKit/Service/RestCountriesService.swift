@@ -21,7 +21,7 @@ final class RestCountriesService: CountriesApiServiceProtocol {
         return URLSession(configuration: configuration)
     }()
     
-    //MARK: - Methods
+    //MARK: - API Calls
     
     func getAll(params: [String : String]) -> AnyPublisher<Data, Error> {
         let url = ApiUtility.createURL(pathParam: .all,
@@ -79,19 +79,17 @@ final class RestCountriesService: CountriesApiServiceProtocol {
     }
 }
 
+//MARK: - API Utility
+
 extension RestCountriesService {
     // Responsibility:
     // It encapsulates info related to RestCountries API (ex: baseURL, endpoints).
     // It helps create URL objects to use to communicate with the API.
     private struct ApiUtility {
-        
-        //MARK: - Static Properties
-        
+                
     //    private static let baseURL = "https://restcountries.eu/rest/v2" // It is down
         private static let baseURL = "https://restcountries.com/v2"
-        
-        //MARK: - Helper Methods
-        
+                
         static func createURL(pathParam: CountriesApiQueryField,
                               pathValue: String = "",
                               queryParams: [String:String] = [:]) -> URL {

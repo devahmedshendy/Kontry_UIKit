@@ -47,7 +47,7 @@ class DetailView: UIView {
     }
 }
 
-//MARK: - Outlet/Views Configuration
+//MARK: - Views Configuration
 
 extension DetailView {
     private func configureBackgroundView() {

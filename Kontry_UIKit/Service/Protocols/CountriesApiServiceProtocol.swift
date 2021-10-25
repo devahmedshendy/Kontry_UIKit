@@ -16,9 +16,3 @@ protocol CountriesApiServiceProtocol {
                 fieldValue: String,
                 params: [String : String]) -> AnyPublisher<Data?, Error>
 }
-
-enum CountriesApiQueryField: String {
-    case all = "all"
-    case name = "name"
-    case alpha2Code = "alpha"
-}

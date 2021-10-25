@@ -20,11 +20,11 @@ final class VisibilityViewModel: VisibilityViewModelProtocol {
     
     private let publisher = PassthroughSubject<Bool, Never>()
     
-    //MARK: - Send Events Methods
-    
     func getPublisher() -> PassthroughSubject<Bool, Never> {
         return publisher
     }
+    
+    //MARK: - Send Events Methods
     
     func show() {
         publisher.send(true)

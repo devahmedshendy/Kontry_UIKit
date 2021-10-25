@@ -22,10 +22,6 @@ final class CountryDetailsViewModel {
     
     var alpha2Code: String
     
-    //MARK: - STATES/GETTERS
-    
-    let detailsPublisher = PassthroughSubject<CountryDetailsDto, Never>()
-    
     //MARK: - init Methods
     
     init(
@@ -39,6 +35,10 @@ final class CountryDetailsViewModel {
         self.loading = loadingViewModel
         self.retryError = retryErrorViewModel
     }
+    
+    //MARK: - Publishers
+    
+    let detailsPublisher = PassthroughSubject<CountryDetailsDto, Never>()
         
     //MARK: - Send Events Methods
     

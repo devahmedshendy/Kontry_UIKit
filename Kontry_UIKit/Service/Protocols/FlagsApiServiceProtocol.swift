@@ -11,11 +11,3 @@ import Combine
 protocol FlagsApiServiceProtocol {
     func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, Error>
 }
-
-enum FlagSize {
-    case w20
-    case w40
-    case w160
-    case w320
-    case w640
-}

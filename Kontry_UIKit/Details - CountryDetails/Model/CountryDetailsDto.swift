@@ -23,6 +23,8 @@ struct CountryDetailsDto {
     
 }
 
+//MARK: - Struct Custom init
+
 extension CountryDetailsDto {
     init(from details: CountryDetailsModel) {
         name = details.name

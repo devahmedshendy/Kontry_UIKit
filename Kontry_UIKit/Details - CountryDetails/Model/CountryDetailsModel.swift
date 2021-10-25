@@ -91,39 +91,6 @@ struct CountryDetailsModel: Codable {
         try container.encode(currencies, forKey: .currencies)
         try container.encode(languages, forKey: .languages)
     }
-    
-    //MARK: - Computed Properties
-    
-//    var populationAsString: String {
-//        return "\(population) \(demonym)"
-//    }
-//    
-//    var currenciesAsString: String {
-//        let string = currencies
-//            .map { $0.code ?? "" }
-//            .joined(separator: ", ")
-//        
-//        return string.isEmpty ? Constant.UNAVAILABLE : string
-//    }
-//    
-//    var languagesAsString: String {
-//        let string = languages
-//            .map { $0.name }
-//            .joined(separator: ", ")
-//        
-//        return string.isEmpty ? Constant.UNAVAILABLE : string
-//    }
-//    
-//    var mapCoordinate: CLLocationCoordinate2D {
-//        return CLLocationCoordinate2D(latitude: latlng[0], longitude: latlng[1])
-//    }
-//    
-//    var mapRegion: MKCoordinateRegion {
-//        MKCoordinateRegion(
-//            center: mapCoordinate,
-//            span: MKCoordinateSpan(latitudeDelta: 25, longitudeDelta: 25)
-//        )
-//    }
 }
 
 extension CountryDetailsModel: Equatable {

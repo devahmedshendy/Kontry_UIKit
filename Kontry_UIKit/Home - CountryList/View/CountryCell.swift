@@ -10,15 +10,15 @@ import Combine
 
 class CountryCell: UICollectionViewCell {
     
-    //MARK: - Static Properties
-    
-    static let reuseIdentifier = String(describing: CountryCell.self)
-    
     //MARK: - Views
     
     private(set) var cellBackgroundView: UIView!
     private(set) var nameLabel: UILabel!
     private(set) var flagImageView: UIImageView!
+    
+    //MARK: - Static Properties
+    
+    static let reuseIdentifier = String(describing: CountryCell.self)
     
     //MARK: - Properties
     
@@ -61,7 +61,7 @@ class CountryCell: UICollectionViewCell {
         configureNameLabel()
     }
     
-    //MARK: - Life Cycle Methods
+    //MARK: - LifeCycle Methods
     
     override func prepareForReuse() {
         flagImageView.image = Asset.Placeholder.w25Flag

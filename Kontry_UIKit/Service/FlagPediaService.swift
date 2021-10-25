@@ -28,7 +28,7 @@ final class FlagPediaService: FlagsApiServiceProtocol {
         return URLSession(configuration: configuration)
     }()
     
-    //MARK: - Methods
+    //MARK: - API Calls
     
     func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, Error> {
         let url = ApiUtility.createURL(alpha2Code: field.lowercased(), size: size)
@@ -51,6 +51,7 @@ final class FlagPediaService: FlagsApiServiceProtocol {
     }
 }
 
+//MARK: - API Utility
 
 extension FlagPediaService {
     // Responsibility:
@@ -58,11 +59,7 @@ extension FlagPediaService {
     // It helps create URL objects to use to communicate with the API.
     private struct ApiUtility {
         
-        //MARK: - Static Properties
-        
         static let baseURL = "https://flagcdn.com"
-        
-        //MARK: - Static Methods
         
         static func createURL(alpha2Code: String, size: FlagSize) -> URL {
             let urlString = "\(baseURL)/\(size)/\(alpha2Code).png"

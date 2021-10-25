@@ -11,7 +11,7 @@ import Combine
 
 class CountryDetailsViewController: UIViewController {
     
-    //MARK: - Outlet/SubViews
+    //MARK: - Views
     
     var navigationBarView: NavigationBarView!
     var mapView: MKMapView!
@@ -32,7 +32,7 @@ class CountryDetailsViewController: UIViewController {
     
     var country: CountryDto?
     
-    //MARK: - Life Cycle Methods
+    //MARK: - LifeCycle Methods
     
     override func loadView() {
         super.loadView()
@@ -107,7 +107,7 @@ class CountryDetailsViewController: UIViewController {
         }
     }
     
-    //MARK: - Helper Methods
+    //MARK: - DataBinding Methods
     
     private func bindToDetailsPublisher() {
         vm.detailsPublisher
@@ -156,6 +156,8 @@ class CountryDetailsViewController: UIViewController {
             .store(in: &subscriptions)
     }
     
+    //MARK: - Helper Methods
+    
     private func showLoadingView() {
         view.addSubview(loadingView)
         configureLoadingView()
@@ -187,7 +189,7 @@ class CountryDetailsViewController: UIViewController {
     }
 }
 
-//MARK: - Outlet/View Configurations
+//MARK: - Views Configurations
 
 extension CountryDetailsViewController {
     
@@ -406,8 +408,9 @@ extension CountryDetailsViewController {
     }
 }
 
-//MARK: - RetryErrorViewDelegate
+//MARK: - Delegates
 
+//MARK: RetryErrorViewDelegate
 extension CountryDetailsViewController: RetryErrorViewDelegate {
     func didPressRetry() {
         vm.retryLoadCountries()
@@ -415,8 +418,7 @@ extension CountryDetailsViewController: RetryErrorViewDelegate {
     }
 }
 
-//MARK: - BackActionDelegate
-
+//MARK: BackActionDelegate
 extension CountryDetailsViewController: BackActionDelegate {
     func didPressBack() {
         navigationController?.popViewController(animated: true)

@@ -37,6 +37,8 @@ struct CountryModel: Codable {
     }
 }
 
+//MARK: - Hashable Conformane
+
 extension CountryModel: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)

@@ -16,8 +16,6 @@ final class FlagViewModel {
     
     private lazy var flagsRepository: FlagsRepository = FlagsRepository()
     
-    //MARK: - States
-    
     //MARK: - Actions
     
     func get40WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {

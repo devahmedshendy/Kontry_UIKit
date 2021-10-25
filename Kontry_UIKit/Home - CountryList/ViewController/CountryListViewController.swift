@@ -10,7 +10,7 @@ import Combine
 
 class CountryListViewController: UIViewController {
     
-    //MARK: - Outlets
+    //MARK: - Views
     
     @IBOutlet weak var collectionView: UICollectionView!
     var loadingView: LoadingView!
@@ -66,13 +66,6 @@ class CountryListViewController: UIViewController {
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         configureCollectionViewLayout()
-    }
-
-    //MARK: - UI Methods
-
-    private func configureNavigationBar() {
-        navigationItem.title = "Countries"
-        navigationController?.navigationBar.prefersLargeTitles = true
     }
     
     //MARK: - DataBinding Methods
@@ -138,6 +131,11 @@ class CountryListViewController: UIViewController {
 //MARK: - Views Configuration
 
 extension CountryListViewController {
+    
+    private func configureNavigationBar() {
+        navigationItem.title = "Countries"
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
     
     private func configureLoadingView() {
         // Constraint Configuration

@@ -16,12 +16,16 @@ struct CountryDto {
     
 }
 
+//MARK: - Struct Custom init
+
 extension CountryDto {
     init(from countryModel: CountryModel) {
         name = countryModel.name
         alpha2Code = countryModel.alpha2Code
     }
 }
+
+//MARK: - Hashable Conformance
 
 extension CountryDto: Hashable {
     func hash(into hasher: inout Hasher) {
