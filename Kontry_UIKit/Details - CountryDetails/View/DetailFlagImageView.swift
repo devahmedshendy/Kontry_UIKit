@@ -17,7 +17,7 @@ final class DetailFlagImageView: RatioConstrainedImageView {
     
     var country: CountryDto? {
         didSet {
-            loadFlag()
+            vm.alpha2Code = country!.alpha2Code
         }
     }
     
@@ -52,33 +52,43 @@ final class DetailFlagImageView: RatioConstrainedImageView {
         self.layer.shadowOffset = CGSize(width: 2.0, height: 3.0)
         self.layer.shadowRadius = CGFloat(10)
         
+        configureViewModel()
+    }
+    
+    //MARK: - ViewModel & DataBinding Methods
+    
+    private func configureViewModel() {
         vm = FlagViewModel(
+            size: .w160,
             flagsRepository: FlagsRepository(
                 flagsApiService: FlagPediaService(),
                 persistenceService: CoreDataService()
             )
         )
+        
+        bindToData()
+        
+        vm.loadFlag()
+    }
+    
+    private func bindToData() {
+        subscription = vm.dataPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] image in
+                guard let self = self else { return }
+                
+                guard let image = image else {
+                    self.image = Asset.Placeholder.w200FlagError
+                    return
+                }
+                
+                self.image = UIImage(data: image)
+            })
     }
     
     //MARK: - Helper Methods
     
     func loadFlag() {
-        subscription = vm
-            .get160WidthFlag(alpha2Code: country!.alpha2Code)
-            .receive(on: RunLoop.main)
-            .sink(
-                receiveCompletion: { completion in
-                    if case let .failure(error) = completion {
-                        print(error)
-                    }
-                },
-                receiveValue: { [weak self] image in
-                    guard let image = image else {
-                        self?.image = Asset.Placeholder.w200FlagError
-                        return
-                    }
-                    
-                    self?.image = UIImage(data: image)
-                })
+        vm.loadFlag()
     }
 }

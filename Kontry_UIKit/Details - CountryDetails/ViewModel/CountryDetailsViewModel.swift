@@ -14,6 +14,8 @@ final class CountryDetailsViewModel {
     
     //MARK: - Properties
     
+    let detailsPublisher = PassthroughSubject<CountryDetailsDto, Never>()
+    
     private var subscription: AnyCancellable?
     private let countriesRepository: CountriesRepositoryProtocol
     
@@ -35,10 +37,6 @@ final class CountryDetailsViewModel {
         self.loading = loadingViewModel
         self.retryError = retryErrorViewModel
     }
-    
-    //MARK: - Publishers
-    
-    let detailsPublisher = PassthroughSubject<CountryDetailsDto, Never>()
         
     //MARK: - Send Events Methods
     

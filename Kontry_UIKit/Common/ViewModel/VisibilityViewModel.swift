@@ -16,7 +16,7 @@ protocol VisibilityViewModelProtocol {
 
 final class VisibilityViewModel: VisibilityViewModelProtocol {
     
-    //MARK: - Publishers
+    //MARK: - Properties
     
     private let publisher = PassthroughSubject<Bool, Never>()
     

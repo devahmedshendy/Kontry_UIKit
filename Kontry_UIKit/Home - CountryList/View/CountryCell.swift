@@ -27,7 +27,8 @@ class CountryCell: UICollectionViewCell {
     
     var country: CountryDto? {
         didSet {
-            loadFlag()
+            nameLabel.text = country!.name
+            vm.alpha2Code = country!.alpha2Code
         }
     }
     
@@ -60,12 +61,7 @@ class CountryCell: UICollectionViewCell {
         configureFlagImageView()
         configureNameLabel()
         
-        vm = FlagViewModel(
-            flagsRepository: FlagsRepository(
-                flagsApiService: FlagPediaService(),
-                persistenceService: CoreDataService()
-            )
-        )
+        configureViewModel()
     }
     
     //MARK: - LifeCycle Methods
@@ -76,30 +72,35 @@ class CountryCell: UICollectionViewCell {
         subscription = nil
     }
     
-    //MARK: - Helper Methods
+    //MARK: - ViewModel & DataBinding Methods
     
-    private func loadFlag() {
-        nameLabel.text = country!.name
+    private func configureViewModel() {
+        vm = FlagViewModel(
+            size: .w40,
+            flagsRepository: FlagsRepository(
+                flagsApiService: FlagPediaService(),
+                persistenceService: CoreDataService()
+            )
+        )
         
-        subscription = vm
-            .get40WidthFlag(alpha2Code: country!.alpha2Code)
+        bindToData()
+        
+        vm.loadFlag()
+    }
+    
+    private func bindToData() {
+        subscription = vm.dataPublisher
             .receive(on: RunLoop.main)
-            .sink(
-                receiveCompletion: { completion in
-                    if case let .failure(error) = completion {
-                        print(error)
-                    }
-                },
-                receiveValue: { [weak self] image in
-                    guard let self = self else { return }
-                    
-                    guard let image = image else {
-                        self.flagImageView.image = Asset.Placeholder.w25FlagError
-                        return
-                    }
-                    
-                    self.flagImageView.image = UIImage(data: image)
-                })
+            .sink(receiveValue: { [weak self] image in
+                guard let self = self else { return }
+                
+                guard let image = image else {
+                    self.flagImageView.image = Asset.Placeholder.w25FlagError
+                    return
+                }
+                
+                self.flagImageView.image = UIImage(data: image)
+            })
     }
 }
 
