@@ -14,7 +14,13 @@ final class FlagViewModel {
     
     //MARK: - Properties
     
-    private lazy var flagsRepository: FlagsRepository = FlagsRepository()
+    private let flagsRepository: FlagsRepositoryProtocol!
+    
+    //MARK: - init Methods
+    
+    init(flagsRepository: FlagsRepositoryProtocol) {
+        self.flagsRepository = flagsRepository
+    }
     
     //MARK: - Actions
     

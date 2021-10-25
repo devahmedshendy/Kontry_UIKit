@@ -22,7 +22,7 @@ class CountryCell: UICollectionViewCell {
     
     //MARK: - Properties
     
-    private let vm = FlagViewModel()
+    private var vm: FlagViewModel!
     private var subscription: AnyCancellable?
     
     var country: CountryDto? {
@@ -59,6 +59,13 @@ class CountryCell: UICollectionViewCell {
         configureBackgroundView()
         configureFlagImageView()
         configureNameLabel()
+        
+        vm = FlagViewModel(
+            flagsRepository: FlagsRepository(
+                flagsApiService: FlagPediaService(),
+                persistenceService: CoreDataService()
+            )
+        )
     }
     
     //MARK: - LifeCycle Methods

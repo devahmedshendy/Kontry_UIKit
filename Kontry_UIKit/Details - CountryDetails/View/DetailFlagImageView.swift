@@ -12,7 +12,7 @@ final class DetailFlagImageView: RatioConstrainedImageView {
     
     //MARK: - Properties
     
-    private let vm = FlagViewModel()
+    private var vm: FlagViewModel!
     private var subscription: AnyCancellable?
     
     var country: CountryDto? {
@@ -51,6 +51,13 @@ final class DetailFlagImageView: RatioConstrainedImageView {
         self.layer.shadowColor = Asset.Color.detailFlagShadow.cgColor
         self.layer.shadowOffset = CGSize(width: 2.0, height: 3.0)
         self.layer.shadowRadius = CGFloat(10)
+        
+        vm = FlagViewModel(
+            flagsRepository: FlagsRepository(
+                flagsApiService: FlagPediaService(),
+                persistenceService: CoreDataService()
+            )
+        )
     }
     
     //MARK: - Helper Methods

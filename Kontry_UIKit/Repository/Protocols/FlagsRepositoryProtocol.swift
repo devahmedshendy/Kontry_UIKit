@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import Combine
 
 protocol FlagsRepositoryProtocol {
-    
+    func get40pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError>
+    func get160pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError>
 }

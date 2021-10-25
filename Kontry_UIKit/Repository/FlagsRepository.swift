@@ -13,8 +13,18 @@ final class FlagsRepository: FlagsRepositoryProtocol {
     //MARK: - Properties
     
     private lazy var jsonDecoder = JSONDecoder()
-    private lazy var flagsApiService: FlagsApiServiceProtocol = FlagPediaService()
-    private lazy var persistenceService: PersistenceServiceProtocol = CoreDataService()
+    private var flagsApiService: FlagsApiServiceProtocol
+    private var persistenceService: PersistenceServiceProtocol
+    
+    //MARK: - init Methods
+    
+    init(
+        flagsApiService: FlagsApiServiceProtocol,
+        persistenceService: PersistenceServiceProtocol
+    ) {
+        self.flagsApiService = flagsApiService
+        self.persistenceService = persistenceService
+    }
     
     //MARK: - Data Operations
     
