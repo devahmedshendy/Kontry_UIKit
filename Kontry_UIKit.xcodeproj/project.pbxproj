@@ -198,7 +198,7 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
-		647FCB0827244A8600402522 /* CountryDetails */ = {
+		647FCB0827244A8600402522 /* Details - CountryDetails */ = {
 			isa = PBXGroup;
 			children = (
 				647FCB1127244B4500402522 /* ViewController */,
@@ -206,7 +206,7 @@
 				647FCB0A27244A9600402522 /* View */,
 				647FCB0B27244A9B00402522 /* ViewModel */,
 			);
-			path = CountryDetails;
+			path = "Details - CountryDetails";
 			sourceTree = "<group>";
 		};
 		647FCB0927244A9200402522 /* Model */ = {
@@ -330,7 +330,7 @@
 			children = (
 				64DD419126B12D7E007E5135 /* App */,
 				647FCB0227244A1400402522 /* Home - CountryList */,
-				647FCB0827244A8600402522 /* CountryDetails */,
+				647FCB0827244A8600402522 /* Details - CountryDetails */,
 				647FCB0C27244ACC00402522 /* Common */,
 				647D37FD26D288D40050C292 /* Repository */,
 				6455089C26D44CFA00796628 /* Service */,
