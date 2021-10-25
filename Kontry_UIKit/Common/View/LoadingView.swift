@@ -9,13 +9,14 @@ import UIKit
 
 class LoadingView: UIView {
 
-    //MARK: - Outlets
-    
-    @IBOutlet weak var stackView: UIStackView!
-    
     //MARK: - Static Properties
     
     static let nibName = String(describing: LoadingView.self)
+    
+    //MARK: - Views
+    
+    @IBOutlet weak var stackView: UIStackView!
+    
     
     //MARK: - Inits
     
@@ -42,4 +43,10 @@ class LoadingView: UIView {
         
         addSubview(nibView)
     }
+}
+
+//MARK: - Views Configuraion
+
+extension LoadingView {
+    
 }

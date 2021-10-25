@@ -9,11 +9,11 @@ import UIKit
 
 class DetailView: UIView {
     
-    //MARK: - Outlets/Views
+    //MARK: - Views
     
-    var iconImage: UIImageView!
-    var titleLabel: UILabel!
-    var valueLabel: UILabel!
+    let iconImage = UIImageView()
+    let titleLabel = UILabel()
+    let valueLabel = UILabel()
 
     //MARK: - Init Methods
     
@@ -29,11 +29,7 @@ class DetailView: UIView {
         initView()
     }
     
-    private func initView() {        
-        iconImage = UIImageView()
-        titleLabel = UILabel()
-        valueLabel = UILabel()
-        
+    private func initView() {
         addSubview(iconImage)
         addSubview(titleLabel)
         addSubview(valueLabel)

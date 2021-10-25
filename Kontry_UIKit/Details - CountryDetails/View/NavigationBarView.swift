@@ -8,21 +8,25 @@
 import UIKit
 
 class NavigationBarView: UIView {
-
-    //MARK: - Static Properties
     
-    static let nibName = String(describing: NavigationBarView.self)
+    //MARK: - Views
     
-    //MARK: - Outlets
-    
-    var titleLabel: UILabel!
-    var backButton: UIImageView!
+    let titleLabel: UILabel = UILabel()
+    let backButton = UIImageView(
+        image: UIImage(
+            systemName: "chevron.backward.circle.fill",
+            withConfiguration: UIImage.SymbolConfiguration(
+                font: UIFont.systemFont(ofSize: 20),
+                scale: UIImage.SymbolScale.large
+            )
+        )
+    )
     
     //MARK: - Properties
     
     var delegate: BackActionDelegate!
     
-    //MARK: - Inits
+    //MARK: - init Methods
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -37,10 +41,7 @@ class NavigationBarView: UIView {
     }
 
     private func initView() {
-        titleLabel = UILabel()
         addSubview(titleLabel)
-        
-        backButton = UIImageView()
         addSubview(backButton)
         
         configureSelf()
@@ -80,13 +81,6 @@ extension NavigationBarView {
     }
     
     private func configureBackButton() {
-        backButton.image = UIImage(
-            systemName: "chevron.backward.circle.fill",
-            withConfiguration: UIImage.SymbolConfiguration(
-                font: UIFont.systemFont(ofSize: 20),
-                scale: UIImage.SymbolScale.large
-            )
-        )
         backButton.contentMode = .scaleAspectFit
         backButton.tintColor = Asset.Color.text
         backButton.isUserInteractionEnabled = true
