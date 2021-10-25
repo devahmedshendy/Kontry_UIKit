@@ -1,32 +1,40 @@
 //
-//  Repository.swift
+//  CountriesRepository.swift
 //  Kontry_UIKit
 //
-//  Created by  Ahmed Shendy on 8/22/21.
+//  Created by  Ahmed Shendy on 10/23/21.
 //
 
 import Foundation
 import Combine
 
-// Responsibility:
-// It communicates with services for local/remote CRUD operations on data models.
-final class Repository {
+final class CountriesRepository: CountriesRepositoryProtocol {
     
     //MARK: - Properties
     
     private lazy var jsonDecoder = JSONDecoder()
-    private lazy var countriesApiService: CountriesApiServiceProtocol = RestCountriesService()
-    private lazy var flagsApiService: FlagsApiServiceProtocol = FlagPediaService()
-    private lazy var persistenceService: PersistenceServiceProtocol = CoreDataService()
+    private let countriesApiService: CountriesApiServiceProtocol
+    private let persistenceService: PersistenceServiceProtocol
     
-    //MARK: - Methods
+    //MARK: - init Methods
+    
+    init(
+        countriesApiService: CountriesApiServiceProtocol,
+        persistenceService: PersistenceServiceProtocol
+    ) {
+        self.countriesApiService = countriesApiService
+        self.persistenceService = persistenceService
+    }
+    
+    //MARK: - Data Operations
     
     // Get list of countries from RestCountries API.
     // It restrict requested fields to the fields of Country data mdoel.
-    func getCountryList() -> AnyPublisher<[Country], KontryError> {
+    func getCountryList() -> AnyPublisher<[CountryModel], KontryError> {
+        
         return countriesApiService
-            .getAll(params: [ "fields": Country.fields])
-            .decode(type: [Country].self, decoder: jsonDecoder)
+            .getAll(params: [ "fields": CountryModel.fields])
+            .decode(type: [CountryModel].self, decoder: jsonDecoder)
             .mapError { error -> KontryError in
                 switch error {
                 case is URLError:
@@ -42,55 +50,29 @@ final class Repository {
             .eraseToAnyPublisher()
     }
     
-    // Get Flag image from FlagPedia API.
-    // It only request flag of width size 40px.
-    func get40pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
+    func getCountryListByName(_ keyword: String) -> AnyPublisher<[CountryModel], KontryError> {
         
-        return self.flagsApiService
-            .get(by: alpha2Code, size: FlagSize.w40, enableCache: true)
-            .mapError { error -> KontryError in
-                return .network(description: error.localizedDescription)
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    // Get Flag image from CoreData or FlagPedia API.
-    // It only request flag of width size 160px.
-    //
-    // This flag is required to be saved in coredata for future requests.
-    // It first checks if it is already in coredata then return it,
-    //   otherwise request it from the API, then save it in coredata.
-    func get160pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
-        
-        return persistenceService
-            .findFlagEntity(for: alpha2Code)
-            .mapError { $0 as Error }
-            .flatMap { [weak self] flag -> AnyPublisher<Data?, Error> in
-                guard let self = self else { return Empty().eraseToAnyPublisher() }
-                
-                if let flag = flag {
-                    return Just(flag.image)
+        return countriesApiService
+            .getAllByName(keyword: keyword, params: [ "fields": CountryModel.fields])
+            .flatMap { [weak self] data -> AnyPublisher<[CountryModel], Error> in
+                guard let self = self, let data = data else {
+                    return Just([])
                         .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
                 
-                return self.flagsApiService
-                    .get(by: alpha2Code, size: FlagSize.w160, enableCache: false)
-                    .map { image -> Data? in
-                        guard let image = image else { return nil }
-
-                        self.persistenceService.createFlagEntity(for: alpha2Code, image)
-
-                        return image
-                    }
-                    .mapError { $0 as Error }
+                return Just(data)
+                    .decode(type: [CountryModel].self, decoder: self.jsonDecoder)
                     .eraseToAnyPublisher()
             }
             .mapError { error -> KontryError in
                 switch error {
                 case is URLError:
                     return .network(description: error.localizedDescription)
-
+                    
+                case is DecodingError:
+                    return .decoding(description: error.localizedDescription)
+                    
                 default:
                     return error as? KontryError ?? .unknown(description: error.localizedDescription)
                 }
@@ -103,12 +85,12 @@ final class Repository {
     // These country details are required to be saved in coredata for future requests.
     // It first checks if it is already in coredata then return it,
     //   otherwise request it from the API, then save it in coredata.
-    func getCountryDetails(for alpha2Code: String) -> AnyPublisher<CountryDetails?, Error> {
+    func getCountryDetails(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, KontryError> {
         
         return findCountryDetailsLocally(for: alpha2Code)
             // Here we check if no details found locally, then get it from remote api
             // Otherwise, just pass the found details to downstream
-            .flatMap { [weak self] countryDetails -> AnyPublisher<CountryDetails?, Error> in
+            .flatMap { [weak self] countryDetails -> AnyPublisher<CountryDetailsModel?, Error> in
                 guard let self = self else { return Empty().eraseToAnyPublisher() }
                 
                 if let countryDetails = countryDetails {
@@ -119,7 +101,7 @@ final class Repository {
                 
                 return self.findCountryDetailsRemotely(for: alpha2Code)
                     // Here we make sure to store details locally if we find it
-                    .map { [weak self] countryDetails -> CountryDetails? in
+                    .map { [weak self] countryDetails -> CountryDetailsModel? in
                         guard let self = self else { return countryDetails }
                         
                         if let countryDetails = countryDetails {
@@ -148,30 +130,26 @@ final class Repository {
             .eraseToAnyPublisher()
     }
     
-    //MARK: - Helper Methods
-    
     // Get country details using alpha2Code from CoreData.
-    private func findCountryDetailsLocally(for alpha2Code: String) -> AnyPublisher<CountryDetails?, Error> {
+    private func findCountryDetailsLocally(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, Error> {
         
         return persistenceService
             .findDetailsEntity(for: alpha2Code)
-            .mapError { $0 as Error }
-            .map { details -> CountryDetails? in
+            .map { details -> CountryDetailsModel? in
                 guard let details = details else { return nil }
                 
-                return CountryDetails(from: details)
+                return CountryDetailsModel(from: details)
             }
             .eraseToAnyPublisher()
     }
     
     // Get country details using alpha2Code from RestCountries API.
     // It restrict requested fields to the fields of CountryDetails data mdoel.
-    private func findCountryDetailsRemotely(for alpha2Code: String) -> AnyPublisher<CountryDetails?, Error> {
+    private func findCountryDetailsRemotely(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, Error> {
         
         return countriesApiService
-            .getOne(by: .alpha2Code, fieldValue: alpha2Code, params: [ "fields": CountryDetails.fields])
-            .mapError { $0 as Error }
-            .flatMap { [weak self] data -> AnyPublisher<CountryDetails?, Error> in
+            .getOne(by: .alpha2Code, fieldValue: alpha2Code, params: [ "fields": CountryDetailsModel.fields])
+            .flatMap { [weak self] data -> AnyPublisher<CountryDetailsModel?, Error> in
                 guard let self = self else { return Empty().eraseToAnyPublisher() }
                 
                 guard let data = data else {
@@ -181,8 +159,8 @@ final class Repository {
                 }
                 
                 return Just(data)
-                    .decode(type: CountryDetails.self, decoder: self.jsonDecoder)
-                    .map { countryDetails -> CountryDetails? in countryDetails }
+                    .decode(type: CountryDetailsModel.self, decoder: self.jsonDecoder)
+                    .map { countryDetails -> CountryDetailsModel? in countryDetails }
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()

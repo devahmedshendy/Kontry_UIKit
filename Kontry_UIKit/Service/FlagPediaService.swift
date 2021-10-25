@@ -30,7 +30,7 @@ final class FlagPediaService: FlagsApiServiceProtocol {
     
     //MARK: - Methods
     
-    func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, URLError> {
+    func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, Error> {
         let url = ApiUtility.createURL(alpha2Code: field.lowercased(), size: size)
         let session = enableCache ? ephemeralSession : defaultSession
         
@@ -46,6 +46,7 @@ final class FlagPediaService: FlagsApiServiceProtocol {
 
                 return result.data
             }
+            .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
 }

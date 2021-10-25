@@ -26,7 +26,7 @@ class CountryCell: UICollectionViewCell {
     private let vm = FlagViewModel()
     private var subscription: AnyCancellable?
     
-    var country: Country? {
+    var country: CountryDto? {
         didSet {
             nameLabel.text = country!.name
             

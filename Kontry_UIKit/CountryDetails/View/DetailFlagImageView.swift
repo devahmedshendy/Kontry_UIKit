@@ -15,25 +15,9 @@ final class DetailFlagImageView: RatioConstrainedImageView {
     private let vm = FlagViewModel()
     private var subscription: AnyCancellable?
     
-    var country: Country? {
+    var country: CountryDto? {
         didSet {
-            subscription = vm
-                .get160WidthFlag(alpha2Code: country!.alpha2Code)
-                .receive(on: RunLoop.main)
-                .sink(
-                    receiveCompletion: { completion in
-                        if case let .failure(error) = completion {
-                            print(error)
-                        }
-                    },
-                    receiveValue: { [weak self] image in
-                        guard let image = image else {
-                            self?.image = Asset.Placeholder.w200FlagError
-                            return
-                        }
-                        
-                        self?.image = UIImage(data: image)
-                    })
+            loadFlag()
         }
     }
     
@@ -67,5 +51,27 @@ final class DetailFlagImageView: RatioConstrainedImageView {
         self.layer.shadowColor = Asset.Color.detailFlagShadow.cgColor
         self.layer.shadowOffset = CGSize(width: 2.0, height: 3.0)
         self.layer.shadowRadius = CGFloat(10)
+    }
+    
+    //MARK: - Helper Methods
+    
+    func loadFlag() {
+        subscription = vm
+            .get160WidthFlag(alpha2Code: country!.alpha2Code)
+            .receive(on: RunLoop.main)
+            .sink(
+                receiveCompletion: { completion in
+                    if case let .failure(error) = completion {
+                        print(error)
+                    }
+                },
+                receiveValue: { [weak self] image in
+                    guard let image = image else {
+                        self?.image = Asset.Placeholder.w200FlagError
+                        return
+                    }
+                    
+                    self?.image = UIImage(data: image)
+                })
     }
 }

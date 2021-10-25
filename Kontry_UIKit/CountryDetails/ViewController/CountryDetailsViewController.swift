@@ -27,10 +27,10 @@ class CountryDetailsViewController: UIViewController {
     
     //MARK: - Properties
     
-    private lazy var vm = CountryDetailsViewModel()
-    private var cancellables = Set<AnyCancellable>()
+    private var vm: CountryDetailsViewModel!
+    private var subscriptions = Set<AnyCancellable>()
     
-    var country: Country?
+    var country: CountryDto?
     
     //MARK: - Life Cycle Methods
     
@@ -47,7 +47,8 @@ class CountryDetailsViewController: UIViewController {
         currencyDetailView = DetailView()
         languageDetailView = DetailView()
         detailStackview = UIStackView(arrangedSubviews: [
-            capitalDetailView, regionDetailView, populationDetailView, currencyDetailView, languageDetailView
+            capitalDetailView, regionDetailView, populationDetailView,
+            currencyDetailView, languageDetailView
         ])
         
         loadingView = LoadingView()
@@ -68,7 +69,21 @@ class CountryDetailsViewController: UIViewController {
         configureDetailStack()
         configureDynamicConstraints()
         
-        loadCountryDetails()
+        vm = CountryDetailsViewModel(
+            alpha2Code: country!.alpha2Code,
+            countriesRepository: CountriesRepository(
+                countriesApiService: RestCountriesService(),
+                persistenceService: CoreDataService()
+            ),
+            loadingViewModel: VisibilityViewModel(),
+            retryErrorViewModel: VisibilityViewModel()
+        )
+        
+        bindToDetailsPublisher()
+        bindToLoadingPublisher()
+        bindToRetryErrorPublisher()
+        
+        vm.loadDetails()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,8 +93,8 @@ class CountryDetailsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
         
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
+        subscriptions.forEach { $0.cancel() }
+        subscriptions.removeAll()
     }
     
     //MARK: - RotateScreen Handler
@@ -94,49 +109,51 @@ class CountryDetailsViewController: UIViewController {
     
     //MARK: - Helper Methods
     
-    private func loadCountryDetails() {
-        hideAllViews()
-        showLoadingView()
-        
-        vm
-            .loadCountryDetails(of: country?.alpha2Code ?? "")
-            .delay(for: .milliseconds(250), scheduler: RunLoop.main)
+    private func bindToDetailsPublisher() {
+        vm.detailsPublisher
             .receive(on: RunLoop.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    guard let self = self else { return }
-                    
-                    self.hideLoadingView()
-                    
-                    if case let .failure(error) = completion {
-                        self.showRetryErrorView()
-                        print(error)
-                    }
-                },
-                receiveValue: { [weak self] countryDetails in
-                    guard let self = self else { return }
-                    
-                    guard let countryDetails = countryDetails else {
-                        self.showRetryErrorView()
-                        return
-                    }
-                    
-                    self.mapView.setRegion(countryDetails.mapRegion, animated: false)
-                    
-                    self.capitalDetailView.valueLabel.text = countryDetails.capital
-                    self.regionDetailView.valueLabel.text = countryDetails.region
-                    self.populationDetailView.valueLabel.text = countryDetails.populationAsString
-                    self.currencyDetailView.valueLabel.text = countryDetails.currenciesAsString
-                    self.languageDetailView.valueLabel.text = countryDetails.languagesAsString
-                    
-                    self.showAllViews()                    
-                })
-            .store(in: &cancellables)
+            .sink(receiveValue: { [weak self] details in
+                self?.mapView.setRegion(details.mapRegion, animated: false)
+                
+                self?.capitalDetailView.valueLabel.text = details.capital
+                self?.regionDetailView.valueLabel.text = details.region
+                self?.populationDetailView.valueLabel.text = details.population
+                self?.currencyDetailView.valueLabel.text = details.currencies
+                self?.languageDetailView.valueLabel.text = details.languages
+                
+                self?.showAllViews()
+            })
+            .store(in: &subscriptions)
     }
     
-    private func retryLoadCountryDetails() {
-        hideRetryErrorView()
-        loadCountryDetails()
+    private func bindToLoadingPublisher() {
+        vm.loading
+            .getPublisher()
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] show in
+                if show {
+                    self?.hideAllViews()
+                    self?.showLoadingView()
+                } else {
+                    self?.hideLoadingView()
+                }
+            })
+            .store(in: &subscriptions)
+    }
+    
+    private func bindToRetryErrorPublisher() {
+        vm.retryError
+            .getPublisher()
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] show in
+                if show {
+                    self?.hideAllViews()
+                    self?.showRetryErrorView()
+                } else {
+                    self?.hideRetryErrorView()
+                }
+            })
+            .store(in: &subscriptions)
     }
     
     private func showLoadingView() {
@@ -393,7 +410,8 @@ extension CountryDetailsViewController {
 
 extension CountryDetailsViewController: RetryErrorViewDelegate {
     func didPressRetry() {
-        retryLoadCountryDetails()
+        vm.retryLoadCountries()
+        flagImageView.loadFlag()
     }
 }
 

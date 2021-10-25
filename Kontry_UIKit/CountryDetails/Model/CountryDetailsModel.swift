@@ -10,7 +10,7 @@ import MapKit
 
 // Responsibility:
 // A data model represents data to be displayed in CountryDetailsViewController.
-struct CountryDetails: Codable {
+struct CountryDetailsModel: Codable {
     
     //MARK: - Types
     
@@ -25,7 +25,7 @@ struct CountryDetails: Codable {
     //MARK: - Static Properties
     
     static var fields: String {
-        return CountryDetails.CodingKeys.allCases
+        return CountryDetailsModel.CodingKeys.allCases
             .map { $0.rawValue }
             .joined(separator: ",")
     }
@@ -94,47 +94,47 @@ struct CountryDetails: Codable {
     
     //MARK: - Computed Properties
     
-    var populationAsString: String {
-        return "\(population) \(demonym)"
-    }
-    
-    var currenciesAsString: String {
-        let string = currencies
-            .map { $0.code ?? "" }
-            .joined(separator: ", ")
-        
-        return string.isEmpty ? Constant.UNAVAILABLE : string
-    }
-    
-    var languagesAsString: String {
-        let string = languages
-            .map { $0.name }
-            .joined(separator: ", ")
-        
-        return string.isEmpty ? Constant.UNAVAILABLE : string
-    }
-    
-    var mapCoordinate: CLLocationCoordinate2D {
-        return CLLocationCoordinate2D(latitude: latlng[0], longitude: latlng[1])
-    }
-    
-    var mapRegion: MKCoordinateRegion {
-        MKCoordinateRegion(
-            center: mapCoordinate,
-            span: MKCoordinateSpan(latitudeDelta: 25, longitudeDelta: 25)
-        )
-    }
+//    var populationAsString: String {
+//        return "\(population) \(demonym)"
+//    }
+//    
+//    var currenciesAsString: String {
+//        let string = currencies
+//            .map { $0.code ?? "" }
+//            .joined(separator: ", ")
+//        
+//        return string.isEmpty ? Constant.UNAVAILABLE : string
+//    }
+//    
+//    var languagesAsString: String {
+//        let string = languages
+//            .map { $0.name }
+//            .joined(separator: ", ")
+//        
+//        return string.isEmpty ? Constant.UNAVAILABLE : string
+//    }
+//    
+//    var mapCoordinate: CLLocationCoordinate2D {
+//        return CLLocationCoordinate2D(latitude: latlng[0], longitude: latlng[1])
+//    }
+//    
+//    var mapRegion: MKCoordinateRegion {
+//        MKCoordinateRegion(
+//            center: mapCoordinate,
+//            span: MKCoordinateSpan(latitudeDelta: 25, longitudeDelta: 25)
+//        )
+//    }
 }
 
-extension CountryDetails: Equatable {
-    static func ==(lhs: CountryDetails, rhs: CountryDetails) -> Bool {
+extension CountryDetailsModel: Equatable {
+    static func ==(lhs: CountryDetailsModel, rhs: CountryDetailsModel) -> Bool {
         return lhs.name == rhs.name
     }
 }
 
 //MARK: - Initialize From Different Models/Componenets
 
-extension CountryDetails {
+extension CountryDetailsModel {
     init(from detailsEntity: DetailsEntity) {
         name = detailsEntity.name!
         alpha2Code = detailsEntity.alpha2_code!

@@ -23,19 +23,41 @@ final class RestCountriesService: CountriesApiServiceProtocol {
     
     //MARK: - Methods
     
-    func getAll(params: [String : String]) -> AnyPublisher<Data, URLError> {
+    func getAll(params: [String : String]) -> AnyPublisher<Data, Error> {
         let url = ApiUtility.createURL(pathParam: .all,
                                        queryParams: params)
         
         return defaultSession
             .dataTaskPublisher(for: url)
             .map { $0.data }
+            .mapError { $0 as Error }
+            .eraseToAnyPublisher()
+    }
+    
+    func getAllByName(keyword: String, params: [String : String]) -> AnyPublisher<Data?, Error> {
+        let url = ApiUtility.createURL(pathParam: .name,
+                                       pathValue: keyword,
+                                       queryParams: params)
+        
+        return defaultSession
+            .dataTaskPublisher(for: url)
+            .map { result -> Data? in
+                let response = result.response as! HTTPURLResponse
+                let statusCode = response.statusCode
+                
+                if statusCode == 404 {
+                    return nil
+                }
+                
+                return result.data
+            }
+            .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
     
     func getOne(by field: CountriesApiQueryField,
                 fieldValue: String,
-                params: [String : String]) -> AnyPublisher<Data?, URLError> {
+                params: [String : String]) -> AnyPublisher<Data?, Error> {
         let url = ApiUtility.createURL(pathParam: field,
                                        pathValue: fieldValue,
                                        queryParams: params)
@@ -52,6 +74,7 @@ final class RestCountriesService: CountriesApiServiceProtocol {
                 
                 return result.data
             }
+            .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
 }

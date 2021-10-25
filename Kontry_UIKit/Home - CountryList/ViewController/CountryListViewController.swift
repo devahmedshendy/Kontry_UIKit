@@ -18,13 +18,11 @@ class CountryListViewController: UIViewController {
     
     //MARK: - Stored Properties
     
-    private lazy var vm = CountryListViewModel()
+    private var vm: CountryListViewModel!
+    private var subscriptions = Set<AnyCancellable>()
     
-    private var dataSource: UICollectionViewDiffableDataSource<Section, Country>!
-    
-    private var collectionViewCancellables = Dictionary<Int, AnyCancellable?>()
-    private var cancellables = Set<AnyCancellable>()
-    
+    private var dataSource: UICollectionViewDiffableDataSource<Section, CountryDto>!
+        
     //MARK: - Lifecycle
     
     override func loadView() {
@@ -41,14 +39,27 @@ class CountryListViewController: UIViewController {
         configureNavigationBar()
         configureCollectionView()
         
-        loadAllCountries()
+        vm = CountryListViewModel(
+            countriesRepository: CountriesRepository(
+                countriesApiService: RestCountriesService(),
+                persistenceService: CoreDataService()
+            ),
+            loadingViewModel: VisibilityViewModel(),
+            retryErrorViewModel: VisibilityViewModel()
+        )
+        
+        bindToCountriesPublisher()
+        bindToLoadingPublisher()
+        bindToRetryErrorPublisher()
+
+        vm.loadCountries()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
+        subscriptions.forEach { $0.cancel() }
+        subscriptions.removeAll()
     }
     
     //MARK: - RotateScreen Handler
@@ -66,36 +77,41 @@ class CountryListViewController: UIViewController {
     
     //MARK: - Helper Methods
     
-    private func loadAllCountries() {
-        showLoadingView()
-        
-        vm
-            .loadCountries()
+    private func bindToCountriesPublisher() {
+        vm.countriesPublisher
             .receive(on: RunLoop.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    guard let self = self else { return }
-                    
-                    self.hideLoadingView()
-                    
-                    if case let .failure(error) = completion {
-                        self.showRetryErrorView()
-                        print(error)
-                    }
-                },
-                receiveValue: { [weak self] list in
-                    guard let self = self else { return }
-                    
-                    self.hideLoadingView()
-                    self.refreshCollectionViewDataSource(with: list, animatingDifferences: true)
-                }
-            )
-            .store(in: &cancellables)
+            .sink(receiveValue: { [weak self] list in
+                self?.refreshCollectionViewDataSource(with: list, animatingDifferences: true)
+            })
+            .store(in: &subscriptions)
     }
     
-    private func retryLoadAllCountries() {
-        hideRetryErrorView()
-        loadAllCountries()
+    private func bindToLoadingPublisher() {
+        vm.loading
+            .getPublisher()
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] show in
+                if show {
+                    self?.showLoadingView()
+                } else {
+                    self?.hideLoadingView()
+                }
+            })
+            .store(in: &subscriptions)
+    }
+    
+    private func bindToRetryErrorPublisher() {
+        vm.retryError
+            .getPublisher()
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] show in
+                if show {
+                    self?.showRetryErrorView()
+                } else {
+                    self?.hideRetryErrorView()
+                }
+            })
+            .store(in: &subscriptions)
     }
     
     private func showLoadingView() {
@@ -237,7 +253,7 @@ extension CountryListViewController {
 //MARK: - RetryErrorViewDelegate
 extension CountryListViewController: RetryErrorViewDelegate {
     func didPressRetry() {
-        retryLoadAllCountries()
+        vm.retryLoadCountries()
     }
 }
 
@@ -285,7 +301,7 @@ extension CountryListViewController {
     }
     
     private func configureCollectionViewDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Country>(collectionView: collectionView) {
+        dataSource = UICollectionViewDiffableDataSource<Section, CountryDto>(collectionView: collectionView) {
             (collectionView, indexPath, country) -> UICollectionViewCell? in
             
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CountryCell.reuseIdentifier, for: indexPath) as? CountryCell else {
@@ -299,8 +315,8 @@ extension CountryListViewController {
         refreshCollectionViewDataSource(with: [])
     }
     
-    private func refreshCollectionViewDataSource(with list: [Country], animatingDifferences: Bool = false) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Country>()
+    private func refreshCollectionViewDataSource(with list: [CountryDto], animatingDifferences: Bool = false) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CountryDto>()
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems(list, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
@@ -370,7 +386,7 @@ extension CountryListViewController: UICollectionViewDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let vc = segue.destination as? CountryDetailsViewController,
-           let selectedCountry = sender as? Country {
+           let selectedCountry = sender as? CountryDto {
             vc.country = selectedCountry
         }
     }

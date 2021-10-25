@@ -14,19 +14,19 @@ final class FlagViewModel {
     
     //MARK: - Properties
     
-    private lazy var repository: Repository = Repository()
+    private lazy var flagsRepository: FlagsRepository = FlagsRepository()
     
     //MARK: - States
     
     //MARK: - Actions
     
     func get40WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
-        return repository
+        return flagsRepository
             .get40pxWidthFlag(for: alpha2Code)
     }
     
     func get160WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
-        return repository
+        return flagsRepository
             .get160pxWidthFlag(for: alpha2Code)
     }
 }

@@ -20,7 +20,7 @@ final class CoreDataService: PersistenceServiceProtocol {
     
     //MARK: - CRUD Operations
     
-    func findFlagEntity(for alpha2Code: String) -> AnyPublisher<FlagEntity?, CoreDataError> {
+    func findFlagEntity(for alpha2Code: String) -> AnyPublisher<FlagEntity?, Error> {
         let fetchRequest: NSFetchRequest<FlagEntity> = FlagEntity.fetchRequest()
         
         fetchRequest.fetchLimit = 1
@@ -38,7 +38,7 @@ final class CoreDataService: PersistenceServiceProtocol {
         saveContext()
     }
     
-    func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, CoreDataError> {
+    func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, Error> {
         let fetchRequest: NSFetchRequest<DetailsEntity> = DetailsEntity.fetchRequest()
         
         fetchRequest.fetchLimit = 1
@@ -47,7 +47,7 @@ final class CoreDataService: PersistenceServiceProtocol {
         return fetchSingleItem(fetchRequest)
     }
     
-    func createDetailsEntity(from countryDetails: CountryDetails) {
+    func createDetailsEntity(from countryDetails: CountryDetailsModel) {
         let newDetailsEntity = DetailsEntity(context: coreDataStack.managedContext)
         
         newDetailsEntity.name = countryDetails.name
@@ -100,7 +100,7 @@ final class CoreDataService: PersistenceServiceProtocol {
         }
     }
     
-    private func fetchSingleItem<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<T?, CoreDataError> {
+    private func fetchSingleItem<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<T?, Error> {
         return Future<T?, CoreDataError> {
             [weak self] promise in
             guard let self = self else { return }
@@ -113,6 +113,7 @@ final class CoreDataService: PersistenceServiceProtocol {
                 promise(.failure(CoreDataError(error: error)))
             }
         }
+        .mapError { $0 as Error }
         .eraseToAnyPublisher()
     }
 }

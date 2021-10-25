@@ -22,4 +22,5 @@ final class Constant {
     }
     
     static let UNAVAILABLE = "UNAVAILABLE"
+    static let BAD_ALPHA2CODE = "BAD_ALPHA2CODE"
 }
