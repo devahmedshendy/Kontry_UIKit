@@ -22,11 +22,7 @@ final class CountryListViewModel {
     let loading: VisibilityViewModelProtocol
     let retryError: VisibilityViewModelProtocol
     
-    var searchKeyword: String = "" {
-        didSet {
-            loadCountries()
-        }
-    }
+    var searchText: String = ""
     
     //MARK: - init Methods
     
@@ -74,12 +70,16 @@ final class CountryListViewModel {
         loadCountries()
     }
     
+    func clearCountryList() {
+        send(list: [])
+    }
+    
     //MARK: - Helper Methods
     
     private func getCountryListPublisher() -> AnyPublisher<[CountryModel], KontryError> {
-        return searchKeyword.isEmpty
+        return searchText.isEmpty
             ? countriesRepository.getCountryList()
-            : countriesRepository.getCountryListByName(searchKeyword)
+            : countriesRepository.getCountryListByName(searchText)
     }
     
     private func cancelPreviousSubscription() {

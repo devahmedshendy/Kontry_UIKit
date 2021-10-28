@@ -10,7 +10,7 @@ import Combine
 
 protocol CountriesApiServiceProtocol {
     func getAll(params: [String : String]) -> AnyPublisher<Data, Error>
-    func getAllByName(keyword: String,
+    func getAllByName(search: String,
                       params: [String : String]) -> AnyPublisher<Data?, Error>
     func getOne(by field: CountriesApiQueryField,
                 fieldValue: String,

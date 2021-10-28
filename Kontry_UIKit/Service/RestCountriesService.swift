@@ -34,19 +34,20 @@ final class RestCountriesService: CountriesApiServiceProtocol {
             .eraseToAnyPublisher()
     }
     
-    func getAllByName(keyword: String, params: [String : String]) -> AnyPublisher<Data?, Error> {
+    func getAllByName(search: String, params: [String : String]) -> AnyPublisher<Data?, Error> {
         let url = ApiUtility.createURL(pathParam: .name,
-                                       pathValue: keyword,
+                                       pathValue: search,
                                        queryParams: params)
         
         return defaultSession
             .dataTaskPublisher(for: url)
-            .map { result -> Data? in
+            .tryMap { result -> Data? in
                 let response = result.response as! HTTPURLResponse
                 let statusCode = response.statusCode
                 
-                if statusCode == 404 {
-                    return nil
+                if statusCode == 404 { // This is fatal error
+                    throw URLError(URLError.Code.badURL , userInfo: ["NSLocalizedDescriptionKey" : "Page not found"])
+//                    return nil
                 }
                 
                 return result.data

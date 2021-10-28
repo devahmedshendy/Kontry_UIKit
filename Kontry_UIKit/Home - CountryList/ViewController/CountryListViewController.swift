@@ -13,6 +13,7 @@ class CountryListViewController: UIViewController {
     //MARK: - Views
     
     var collectionView: UICollectionView!
+    var searchController: UISearchController!
     var loadingView: LoadingView!
     var retryErrorView: RetryErrorView!
     
@@ -33,6 +34,7 @@ class CountryListViewController: UIViewController {
         retryErrorView = RetryErrorView()
         
         collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: UICollectionViewFlowLayout.init())
+        searchController = UISearchController(searchResultsController: nil)
         
         view.addSubview(collectionView)
     }
@@ -41,6 +43,7 @@ class CountryListViewController: UIViewController {
         super.viewDidLoad()
         
         configureNavigationBar()
+        configureSearchController()
         configureCollectionView()
         configureViewModel()
     }
@@ -50,6 +53,14 @@ class CountryListViewController: UIViewController {
         
         subscriptions.forEach { $0.cancel() }
         subscriptions.removeAll()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        bindToCountriesPublisher()
+        bindToLoadingPublisher()
+        bindToRetryErrorPublisher()
     }
     
     //MARK: - RotateScreen Handler
@@ -70,9 +81,7 @@ class CountryListViewController: UIViewController {
             retryErrorViewModel: VisibilityViewModel()
         )
         
-        bindToCountriesPublisher()
-        bindToLoadingPublisher()
-        bindToRetryErrorPublisher()
+        
 
         vm.loadCountries()
     }
@@ -82,6 +91,7 @@ class CountryListViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] list in
                 self?.refreshCollectionViewDataSource(with: list, animatingDifferences: true)
+                self?.showAllViews()
             })
             .store(in: &subscriptions)
     }
@@ -93,6 +103,7 @@ class CountryListViewController: UIViewController {
             .sink(receiveValue: { [weak self] show in
                 if show {
                     self?.showLoadingView()
+                    self?.hideAllViews()
                 } else {
                     self?.hideLoadingView()
                 }
@@ -107,6 +118,7 @@ class CountryListViewController: UIViewController {
             .sink(receiveValue: { [weak self] show in
                 if show {
                     self?.showRetryErrorView()
+                    self?.hideAllViews()
                 } else {
                     self?.hideRetryErrorView()
                 }
@@ -133,6 +145,14 @@ class CountryListViewController: UIViewController {
     private func hideRetryErrorView() {
         retryErrorView.removeFromSuperview()
     }
+    
+    private func showAllViews   () {
+        collectionView.isHidden = false
+    }
+    
+    private func hideAllViews() {
+        collectionView.isHidden = true
+    }
 }
 
 //MARK: - Views Configuration
@@ -142,6 +162,23 @@ extension CountryListViewController {
     private func configureNavigationBar() {
         navigationItem.title = "Countries"
         navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    private func configureSearchController() {
+        searchController.searchResultsUpdater = self
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.delegate = self
+        searchController.searchBar.autocapitalizationType = .none
+        searchController.searchBar.placeholder = Constant.Placeholder.searchByName
+        searchController.searchBar.keyboardType = .alphabet
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        
+        definesPresentationContext = true
     }
     
     private func configureLoadingView() {
@@ -246,14 +283,6 @@ extension CountryListViewController {
 }
 
 //MARK: - Delegates
-
-//MARK: RetryErrorViewDelegate
-extension CountryListViewController: RetryErrorViewDelegate {
-    func didPressRetry() {
-        vm.retryLoadCountries()
-    }
-}
-
 //MARK: UICollectionViewDelegate
 extension CountryListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -271,5 +300,69 @@ extension CountryListViewController: UICollectionViewDelegate {
            let selectedCountry = sender as? CountryDto {
             vc.country = selectedCountry
         }
+    }
+}
+
+//MARK: - UISearchResultsUpdating
+extension CountryListViewController: UISearchResultsUpdating {
+    private var searchBarIsEmpty: Bool {
+        return searchController.searchBar.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .isEmpty ?? true
+    }
+    private var searchBarIsNotEmpty: Bool {
+        return !searchBarIsEmpty
+    }
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        print("updateSearchResults")
+        if searchBarIsEmpty {
+            vm.searchText = ""
+            vm.clearCountryList()
+            
+        } else {
+            let searchText = searchController.searchBar.text!
+            if vm.searchText != searchText {
+                vm.searchText = searchText
+                vm.loadCountries()
+            }
+        }
+        
+        
+    }
+}
+
+//MARK: UISearchBarDelegate
+extension CountryListViewController: UISearchBarDelegate {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("searchBarCancelButtonClicked")
+        vm.searchText = ""
+        vm.loadCountries()
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("searchBarTextDidBeginEditing")
+        if searchBarIsEmpty {
+            vm.clearCountryList()
+        }
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        print("searchBarTextDidEndEditing")
+        if searchBarIsEmpty {
+            vm.searchText = ""
+            vm.loadCountries()
+        }
+    }
+}
+
+//MARK: RetryErrorViewDelegate
+extension CountryListViewController: RetryErrorViewDelegate {
+    func didPressRetry() {
+        vm.retryLoadCountries()
     }
 }

@@ -10,6 +10,6 @@ import Combine
 
 protocol CountriesRepositoryProtocol {
     func getCountryList() -> AnyPublisher<[CountryModel], KontryError>
-    func getCountryListByName(_ keyword: String) -> AnyPublisher<[CountryModel], KontryError>
+    func getCountryListByName(_ search: String) -> AnyPublisher<[CountryModel], KontryError>
     func getCountryDetails(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, KontryError>
 }

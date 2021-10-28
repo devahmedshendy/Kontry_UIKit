@@ -132,7 +132,7 @@ extension CountryCell {
             flagImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15.0),
             flagImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             flagImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            flagImageView.widthAnchor.constraint(equalToConstant: 30.0)
+            flagImageView.widthAnchor.constraint(equalToConstant: 32.0)
         ])
     }
     

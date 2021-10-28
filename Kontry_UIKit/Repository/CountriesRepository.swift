@@ -50,10 +50,10 @@ final class CountriesRepository: CountriesRepositoryProtocol {
             .eraseToAnyPublisher()
     }
     
-    func getCountryListByName(_ keyword: String) -> AnyPublisher<[CountryModel], KontryError> {
+    func getCountryListByName(_ search: String) -> AnyPublisher<[CountryModel], KontryError> {
         
         return countriesApiService
-            .getAllByName(keyword: keyword, params: [ "fields": CountryModel.fields])
+            .getAllByName(search: search, params: [ "fields": CountryModel.fields])
             .flatMap { [weak self] data -> AnyPublisher<[CountryModel], Error> in
                 guard let self = self, let data = data else {
                     return Just([])
@@ -63,6 +63,17 @@ final class CountriesRepository: CountriesRepositoryProtocol {
                 
                 return Just(data)
                     .decode(type: [CountryModel].self, decoder: self.jsonDecoder)
+                    .tryCatch { error -> AnyPublisher<[CountryModel], Error> in
+                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
+                            if let status = json["status"] as? Int, status == 404 {
+                                    return Just([])
+                                        .setFailureType(to: Error.self)
+                                        .eraseToAnyPublisher()
+                            }
+                        }
+                        
+                        throw error
+                    }
                     .eraseToAnyPublisher()
             }
             .mapError { error -> KontryError in

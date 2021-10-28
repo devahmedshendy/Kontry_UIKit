@@ -27,6 +27,10 @@ final class Constant {
         static let failedToFetchContent = "Failed to fetch content"
     }
     
+    class Placeholder {
+        static let searchByName = "Search By Name"
+    }
+    
     static let UNAVAILABLE = "UNAVAILABLE"
     static let BAD_ALPHA2CODE = "BAD_ALPHA2CODE"
 }
