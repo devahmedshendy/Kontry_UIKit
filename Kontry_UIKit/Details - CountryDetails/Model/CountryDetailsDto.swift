@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import MapKit
 
 struct CountryDetailsDto {
     
@@ -17,10 +16,15 @@ struct CountryDetailsDto {
     let capital: String
     let region: String
     let population: String
-    let mapRegion: MKCoordinateRegion
+    let coordinate: CoordinateDto
     let currencies: String
     let languages: String
     
+}
+
+struct CoordinateDto {
+    let latitude: Double
+    let longitude: Double
 }
 
 //MARK: - Struct Custom init
@@ -33,10 +37,7 @@ extension CountryDetailsDto {
         region = details.region
         population = "\(details.population) \(details.demonym)"
         
-        mapRegion = MKCoordinateRegion(
-            center: CLLocationCoordinate2D(latitude: details.latlng[0], longitude: details.latlng[1]),
-            span: MKCoordinateSpan(latitudeDelta: 25, longitudeDelta: 25)
-        )
+        coordinate = CoordinateDto(latitude: details.latlng[0], longitude: details.latlng[1])
         
         currencies = {
             let string = details.currencies

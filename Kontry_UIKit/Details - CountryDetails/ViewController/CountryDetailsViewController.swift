@@ -118,7 +118,13 @@ class CountryDetailsViewController: UIViewController {
         vm.detailsPublisher
             .receive(on: RunLoop.main)
             .sink(receiveValue: { [weak self] details in
-                self?.mapView.setRegion(details.mapRegion, animated: false)
+                let mapRegion = MKCoordinateRegion(
+                    center: CLLocationCoordinate2D(latitude: details.coordinate.latitude,
+                                                   longitude: details.coordinate.longitude),
+                    span: MKCoordinateSpan(latitudeDelta: 25, longitudeDelta: 25)
+                )
+                
+                self?.mapView.setRegion(mapRegion, animated: false)
                 
                 self?.capitalDetailView.valueLabel.text = details.capital
                 self?.regionDetailView.valueLabel.text = details.region
