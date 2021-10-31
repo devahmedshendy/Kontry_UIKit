@@ -9,8 +9,6 @@ import Foundation
 
 struct CountryDetailsDto {
     
-    //MARK: - Properties
-    
     let name: String
     let alpha2Code: String
     let capital: String
@@ -23,8 +21,10 @@ struct CountryDetailsDto {
 }
 
 struct CoordinateDto {
+    
     let latitude: Double
     let longitude: Double
+    
 }
 
 //MARK: - Struct Custom init

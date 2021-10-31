@@ -9,8 +9,6 @@ import Foundation
 
 struct CountryDto {
     
-    //MARK: - Properties
-    
     let name: String
     let alpha2Code: String
     

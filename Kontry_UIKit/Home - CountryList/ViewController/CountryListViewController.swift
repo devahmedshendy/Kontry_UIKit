@@ -19,10 +19,10 @@ class CountryListViewController: UIViewController {
     
     //MARK: - Properties
     
+    var dataSource: UICollectionViewDiffableDataSource<Section, CountryDto>!
+    
     private var vm: CountryListViewModel!
     private var subscriptions = Set<AnyCancellable>()
-    
-    private var dataSource: UICollectionViewDiffableDataSource<Section, CountryDto>!
         
     //MARK: - Lifecycle Methods
     
@@ -155,133 +155,6 @@ class CountryListViewController: UIViewController {
     }
 }
 
-//MARK: - Views Configuration
-
-extension CountryListViewController {
-    
-    private func configureNavigationBar() {
-        navigationItem.title = "Countries"
-        navigationController?.navigationBar.prefersLargeTitles = true
-    }
-    
-    private func configureSearchController() {
-        searchController.searchResultsUpdater = self
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.obscuresBackgroundDuringPresentation = false
-        
-        searchController.searchBar.sizeToFit()
-        searchController.searchBar.delegate = self
-        searchController.searchBar.autocapitalizationType = .none
-        searchController.searchBar.placeholder = Constant.Placeholder.searchByName
-        searchController.searchBar.keyboardType = .alphabet
-        
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-        
-        definesPresentationContext = true
-    }
-    
-    private func configureLoadingView() {
-        // Constraint Configuration
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-    }
-    
-    private func configureRetryErrorView() {
-        retryErrorView.delegate = self
-        
-        // Constraint Configuration
-        retryErrorView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            retryErrorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            retryErrorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            retryErrorView.topAnchor.constraint(equalTo: view.topAnchor),
-            retryErrorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-}
-
-//MARK: - CollectionView Configuration
-
-extension CountryListViewController {
-    
-    private func configureCollectionView() {
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.backgroundColor = UIColor.clear
-        collectionView.delegate = self
-        
-        collectionView.register(
-            CountryCell.self,
-            forCellWithReuseIdentifier: CountryCell.reuseIdentifier
-        )
-        
-        // Constraint Configuration
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20.0),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20.0),
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
-        
-        
-        configureCollectionViewLayout()
-        configureCollectionViewDataSource()
-    }
-    
-    private func configureCollectionViewLayout() {
-        
-        let itemWidthDimension: NSCollectionLayoutDimension = .fractionalWidth(1.0)
-        let itemHeightDimension: NSCollectionLayoutDimension = .fractionalHeight(1.0)
-        let itemLayout = NSCollectionLayoutSize(widthDimension: itemWidthDimension, heightDimension: itemHeightDimension)
-        let item = NSCollectionLayoutItem(layoutSize: itemLayout)
-        
-        
-        let groupWidthDimension: NSCollectionLayoutDimension = .fractionalWidth(1.0)
-        let groupHeightDimension: NSCollectionLayoutDimension = .fractionalHeight(traitCollection.isRegularHeight ? 0.07 : 0.15)
-        let groupItemCount = traitCollection.isCompactHeight ? 2 : 1
-        let groupLayout = NSCollectionLayoutSize(widthDimension: groupWidthDimension, heightDimension: groupHeightDimension)
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupLayout, subitem: item, count: groupItemCount)
-        group.interItemSpacing = .fixed(15)
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 15
-        section.contentInsets = NSDirectionalEdgeInsets(top: 15, leading: 0, bottom: 0, trailing: 0)
-        
-        let collectionViewLayout = UICollectionViewCompositionalLayout(section: section)
-        
-        collectionView.setCollectionViewLayout(collectionViewLayout, animated: true)
-    }
-    
-    private func configureCollectionViewDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, CountryDto>(collectionView: collectionView) {
-            (collectionView, indexPath, country) -> UICollectionViewCell? in
-            
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CountryCell.reuseIdentifier, for: indexPath) as? CountryCell else {
-                fatalError("Cannot create country cell!")
-            }
-            
-            cell.country = country
-            return cell
-        }
-                
-        refreshCollectionViewDataSource(with: [])
-    }
-    
-    private func refreshCollectionViewDataSource(with list: [CountryDto], animatingDifferences: Bool = false) {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, CountryDto>()
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems(list, toSection: .main)
-        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
-    }
-}
-
 //MARK: - Delegates
 //MARK: UICollectionViewDelegate
 extension CountryListViewController: UICollectionViewDelegate {
@@ -315,7 +188,6 @@ extension CountryListViewController: UISearchResultsUpdating {
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        print("updateSearchResults")
         if searchBarIsEmpty {
             vm.searchText = ""
             vm.clearCountryList()
@@ -335,24 +207,17 @@ extension CountryListViewController: UISearchResultsUpdating {
 //MARK: UISearchBarDelegate
 extension CountryListViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        print("searchBarCancelButtonClicked")
         vm.searchText = ""
         vm.loadCountries()
     }
     
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
-    }
-    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("searchBarTextDidBeginEditing")
         if searchBarIsEmpty {
             vm.clearCountryList()
         }
     }
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        print("searchBarTextDidEndEditing")
         if searchBarIsEmpty {
             vm.searchText = ""
             vm.loadCountries()
