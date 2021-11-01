@@ -9,7 +9,7 @@ import Foundation
 import MapKit
 
 // Responsibility:
-// A data model represents data to be displayed in CountryDetailsViewController.
+// A data model represents more details about specific country requested from remote API.
 struct CountryDetailsModel: Codable {
     
     //MARK: - Types

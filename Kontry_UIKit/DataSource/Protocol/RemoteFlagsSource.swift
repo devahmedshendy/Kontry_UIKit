@@ -11,3 +11,11 @@ import Combine
 protocol RemoteFlagsSource {
     func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, URLError>
 }
+
+enum FlagSize {
+    case w20
+    case w40
+    case w160
+    case w320
+    case w640
+}

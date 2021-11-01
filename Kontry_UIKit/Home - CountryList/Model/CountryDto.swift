@@ -7,6 +7,8 @@
 
 import Foundation
 
+// Responsibility:
+// Its holds basic country data prepared for list of countries in CountryListViewController.
 struct CountryDto {
     
     let name: String

@@ -10,7 +10,7 @@ import Combine
 
 // Responsibility:
 // It handles network-related tasks for FlagPedia API.
-// It does it using URLSession.
+// It uses URLSession for this.
 final class FlagPediaSource: RemoteFlagsSource {
     
     //MARK: - Properties

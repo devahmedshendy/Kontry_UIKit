@@ -9,6 +9,8 @@ import UIKit
 import MapKit
 import Combine
 
+// Responsibility:
+// This screen displays more details about specific country.
 class CountryDetailsViewController: UIViewController {
     
     //MARK: - Views

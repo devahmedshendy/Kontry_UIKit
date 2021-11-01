@@ -8,6 +8,9 @@
 import UIKit
 import Combine
 
+// Responsibility:
+// It is the main screen.
+// It displays list of all countries, and provide the option to search for countries by name.
 class CountryListViewController: UIViewController {
     
     //MARK: - Views

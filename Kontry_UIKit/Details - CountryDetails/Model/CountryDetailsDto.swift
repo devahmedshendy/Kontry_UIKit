@@ -7,6 +7,8 @@
 
 import Foundation
 
+// Responsibility:
+// Its holds more details about specific country prepared for CountryDetailsViewController.
 struct CountryDetailsDto {
     
     let name: String

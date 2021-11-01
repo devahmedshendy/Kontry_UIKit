@@ -11,7 +11,7 @@ import Combine
 
 // Responsibility:
 // It handle tasks that require storing data for offline use.
-// It does it using CoreData.
+// It uses CoreData for this.
 final class CoreDataSource: LocalPersistenceSource {
     
     //MARK: - Properties

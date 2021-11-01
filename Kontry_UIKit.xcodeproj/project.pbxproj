@@ -35,7 +35,6 @@
 		647FCB2D272484FB00402522 /* VisibilityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 647FCB2C272484FA00402522 /* VisibilityViewModel.swift */; };
 		64868F17272F882400C9E3B6 /* RetryDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64868F16272F882400C9E3B6 /* RetryDelegate.swift */; };
 		64868F1B272F884400C9E3B6 /* NavigateBackDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64868F1A272F884400C9E3B6 /* NavigateBackDelegate.swift */; };
-		6493404F26EF98B80090F826 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6493404E26EF98B80090F826 /* Enums.swift */; };
 		6493405326F0A1BC0090F826 /* FlagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6493405226F0A1BC0090F826 /* FlagViewModel.swift */; };
 		6496025527217B9B00261A42 /* RemoteCountriesSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6496025427217B9B00261A42 /* RemoteCountriesSource.swift */; };
 		6496025927217DD200261A42 /* LocalPersistenceSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6496025827217DD200261A42 /* LocalPersistenceSource.swift */; };
@@ -93,7 +92,6 @@
 		647FCB2C272484FA00402522 /* VisibilityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibilityViewModel.swift; sourceTree = "<group>"; };
 		64868F16272F882400C9E3B6 /* RetryDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RetryDelegate.swift; sourceTree = "<group>"; };
 		64868F1A272F884400C9E3B6 /* NavigateBackDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigateBackDelegate.swift; sourceTree = "<group>"; };
-		6493404E26EF98B80090F826 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		6493405226F0A1BC0090F826 /* FlagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlagViewModel.swift; sourceTree = "<group>"; };
 		6496025427217B9B00261A42 /* RemoteCountriesSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteCountriesSource.swift; sourceTree = "<group>"; };
 		6496025827217DD200261A42 /* LocalPersistenceSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPersistenceSource.swift; sourceTree = "<group>"; };
@@ -158,7 +156,6 @@
 		644B8A8B26C2BFC00078C727 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
-				6493404E26EF98B80090F826 /* Enums.swift */,
 				64C894E727064ECD00920812 /* Assets.swift */,
 				64C895002707B2C400920812 /* Constants.swift */,
 			);
@@ -491,7 +488,6 @@
 				640AD1E526FCA53700410895 /* LoadingView.swift in Sources */,
 				6496025927217DD200261A42 /* LocalPersistenceSource.swift in Sources */,
 				6446D47D272F818F00773B2C /* Extension+NSSet.swift in Sources */,
-				6493404F26EF98B80090F826 /* Enums.swift in Sources */,
 				64DD417D26B12CD9007E5135 /* AppDelegate.swift in Sources */,
 				64DD417F26B12CD9007E5135 /* SceneDelegate.swift in Sources */,
 				64C894E827064ECD00920812 /* Assets.swift in Sources */,

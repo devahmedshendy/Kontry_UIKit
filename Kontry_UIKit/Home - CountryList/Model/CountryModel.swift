@@ -8,7 +8,7 @@
 import Foundation
 
 // Responsibility:
-// A data model represents data to be displayed in CountryListViewController.
+// A data model represents basic country data requested from remote API.
 struct CountryModel: Codable {
     
     //MARK: - Static Properties

@@ -10,7 +10,7 @@ import Combine
 
 // Responsibility:
 // It handles network-related tasks for RestCountries API.
-// It does it using URLSession.
+// It uses URLSession for this.
 final class RestCountriesSource: RemoteCountriesSource {
     
     //MARK: - Properties
@@ -84,6 +84,7 @@ final class RestCountriesSource: RemoteCountriesSource {
 //MARK: - API Utility
 
 extension RestCountriesSource {
+    
     // Responsibility:
     // It encapsulates info related to RestCountries API (ex: baseURL, endpoints).
     // It helps create URL objects to use to communicate with the API.
@@ -112,4 +113,5 @@ extension RestCountriesSource {
             return components.url!
         }
     }
+    
 }

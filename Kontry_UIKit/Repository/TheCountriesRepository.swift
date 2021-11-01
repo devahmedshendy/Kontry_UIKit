@@ -8,6 +8,9 @@
 import Foundation
 import Combine
 
+// Responsibility
+// It is the next component after ViewModels.
+// It communicates with remote/local resources for data about countries.
 final class TheCountriesRepository: CountriesRepository {
     
     //MARK: - Properties
@@ -31,7 +34,7 @@ final class TheCountriesRepository: CountriesRepository {
     //MARK: - Data Operations
     
     // Get list of countries from RestCountries API.
-    // It restrict requested fields to the fields of Country data mdoel.
+    // It requests specific fields for the result.
     func getCountryList() -> AnyPublisher<[CountryModel], KontryError> {
         
         return remoteCountriesSource
@@ -42,6 +45,8 @@ final class TheCountriesRepository: CountriesRepository {
             .eraseToAnyPublisher()
     }
     
+    // Get list of countries that match seach keyword from RestCountries API.
+    // It requests specific fields for the result.
     func getCountryListByName(_ search: String) -> AnyPublisher<[CountryModel], KontryError> {
         
         return remoteCountriesSource
@@ -73,7 +78,7 @@ final class TheCountriesRepository: CountriesRepository {
             .eraseToAnyPublisher()
     }
     
-    // Get more country details using alpha2Code from CoreData or RestCounties API.
+    // Get more details about specific country using alpha2Code from CoreData otherwise from RestCountries API.
     //
     // These country details are required to be saved in coredata for future requests.
     // It first checks if it is already in coredata then return it,
@@ -126,8 +131,8 @@ final class TheCountriesRepository: CountriesRepository {
             .eraseToAnyPublisher()
     }
     
-    // Get country details using alpha2Code from RestCountries API.
-    // It restrict requested fields to the fields of CountryDetails data mdoel.
+    // Get more details about specific country using alpha2Code from RestCountries API.
+    // It requests specific fields for the result.
     private func findCountryDetailsRemotely(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, KontryError> {
         
         return remoteCountriesSource

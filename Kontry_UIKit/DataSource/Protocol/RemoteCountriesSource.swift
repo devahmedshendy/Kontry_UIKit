@@ -16,3 +16,9 @@ protocol RemoteCountriesSource {
                 fieldValue: String,
                 params: [String : String]) -> AnyPublisher<Data?, URLError>
 }
+
+enum CountriesApiQueryField: String {
+    case all = "all"
+    case name = "name"
+    case alpha2Code = "alpha"
+}

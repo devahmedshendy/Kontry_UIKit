@@ -8,12 +8,9 @@
 import Foundation
 import Combine
 
-protocol VisibilityViewModel {
-    func getPublisher() -> PassthroughSubject<Bool, Never>
-    func show()
-    func hide()
-}
-
+// Responsibility
+// A viewmodel that handles visibility state (show & hide).
+// It is made for views used for loading, error, etc...
 final class TheVisibilityViewModel: VisibilityViewModel {
     
     //MARK: - Properties
@@ -33,4 +30,10 @@ final class TheVisibilityViewModel: VisibilityViewModel {
     func hide() {
         publisher.send(false)
     }
+}
+
+protocol VisibilityViewModel {
+    func getPublisher() -> PassthroughSubject<Bool, Never>
+    func show()
+    func hide()
 }

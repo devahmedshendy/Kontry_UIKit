@@ -8,6 +8,9 @@
 import Foundation
 import Combine
 
+// Responsibility
+// It is the next component after ViewModels.
+// It communicates with remote/local resources for data about countries.
 final class TheFlagsRepository: FlagsRepository {
     
     //MARK: - Properties

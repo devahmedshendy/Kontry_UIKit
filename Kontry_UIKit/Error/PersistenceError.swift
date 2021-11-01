@@ -8,7 +8,7 @@
 import Foundation
 
 // Responsibility:
-// It is kind of a wrapper for CoreData native error so I can integrate it with Combine.
+// It represents the error thrown by the local persistence resource.
 struct PersistenceError: Error {
     var userInfo: [String : Any]
     

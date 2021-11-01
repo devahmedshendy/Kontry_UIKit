@@ -8,6 +8,10 @@
 import Foundation
 import UIKit
 
+enum Section: CaseIterable {
+    case main
+}
+
 // MARK: - SubViews Configuration
 
 extension CountryListViewController {

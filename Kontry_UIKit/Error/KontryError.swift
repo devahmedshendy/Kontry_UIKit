@@ -8,7 +8,8 @@
 import Foundation
 
 // Responsibility:
-// It would be used to map from low-level errors to high-level errors that make sense for UI.
+// It is used for mapping all low-level errors to it.
+// It is the error received by the ViewModels & Views at the end of data operations.
 struct KontryError: Error, CustomStringConvertible {
     var description: String
     
