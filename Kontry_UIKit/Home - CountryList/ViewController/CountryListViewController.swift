@@ -107,6 +107,7 @@ class CountryListViewController: UIViewController {
             .sink(receiveValue: { [weak self] show in
                 if show {
                     self?.showLoadingView()
+                    self?.hideRetryErrorView()
                     self?.hideAllViews()
                 } else {
                     self?.hideLoadingView()
@@ -182,13 +183,11 @@ extension CountryListViewController: UICollectionViewDelegate {
 
 //MARK: - UISearchResultsUpdating
 extension CountryListViewController: UISearchResultsUpdating {
+    
     private var searchBarIsEmpty: Bool {
         return searchController.searchBar.text?
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .isEmpty ?? true
-    }
-    private var searchBarIsNotEmpty: Bool {
-        return !searchBarIsEmpty
     }
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -203,13 +202,13 @@ extension CountryListViewController: UISearchResultsUpdating {
                 vm.loadCountries()
             }
         }
-        
-        
     }
+    
 }
 
 //MARK: UISearchBarDelegate
 extension CountryListViewController: UISearchBarDelegate {
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         vm.searchText = ""
         vm.loadCountries()
@@ -227,6 +226,7 @@ extension CountryListViewController: UISearchBarDelegate {
             vm.loadCountries()
         }
     }
+    
 }
 
 //MARK: RetryDelegate

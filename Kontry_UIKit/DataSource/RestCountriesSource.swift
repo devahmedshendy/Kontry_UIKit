@@ -76,7 +76,7 @@ final class RestCountriesSource: RemoteCountriesSource {
                 
                 return result.data
             }
-            .mapError { $0 as! URLError }
+            .mapError { $0 as URLError }
             .eraseToAnyPublisher()
     }
 }

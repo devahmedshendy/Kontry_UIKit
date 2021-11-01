@@ -12,34 +12,6 @@ import UIKit
 
 extension CountryDetailsViewController {
     
-    func configureLoadingView() {
-        
-        // Constraint Configuration
-        loadingView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            loadingView.widthAnchor.constraint(equalToConstant: 50.0),
-            loadingView.heightAnchor.constraint(equalTo: loadingView.heightAnchor)
-        ])
-    }
-    
-    func configureRetryErrorView() {
-        retryErrorView.delegate = self
-        
-        // Constraint Configuration
-        
-        retryErrorView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            retryErrorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            retryErrorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            retryErrorView.topAnchor.constraint(equalTo: view.topAnchor),
-            retryErrorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-    
     func configureNavigationBarView() {
         navigationBarView.delegate = self
         navigationBarView.titleLabel.text = country?.name ?? "?????"
@@ -103,6 +75,41 @@ extension CountryDetailsViewController {
             detailStackview.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
     }
+}
+
+
+// MARK: - Loading & RetryError Views
+
+extension CountryDetailsViewController {
+    
+    func configureLoadingView() {
+        
+        // Constraint Configuration
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            loadingView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loadingView.widthAnchor.constraint(equalToConstant: 50.0),
+            loadingView.heightAnchor.constraint(equalTo: loadingView.heightAnchor)
+        ])
+    }
+    
+    func configureRetryErrorView() {
+        retryErrorView.delegate = self
+        
+        // Constraint Configuration
+        
+        retryErrorView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            retryErrorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            retryErrorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            retryErrorView.topAnchor.constraint(equalTo: navigationBarView.bottomAnchor),
+            retryErrorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
+    
 }
 
 // MARK: - Dynamic Constraints Configurations

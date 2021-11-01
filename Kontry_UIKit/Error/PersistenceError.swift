@@ -10,9 +10,9 @@ import Foundation
 // Responsibility:
 // It represents the error thrown by the local persistence resource.
 struct PersistenceError: Error {
-    var userInfo: [String : Any]
+    var localizedDescription: String
     
     init(error: NSError) {
-        self.userInfo = error.userInfo
+        self.localizedDescription = error.localizedDescription
     }
 }

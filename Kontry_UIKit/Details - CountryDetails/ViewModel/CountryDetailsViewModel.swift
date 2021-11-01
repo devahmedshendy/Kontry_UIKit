@@ -72,13 +72,6 @@ final class CountryDetailsViewModel {
                 }
             )
     }
-    
-//    func loadCountryDetails(of code: String) -> AnyPublisher<CountryDetailsModel?, Error> {
-//        return countriesRepository
-//            .getCountryDetails(for: code)
-//            .mapError { $0 as Error }
-//            .eraseToAnyPublisher()
-//    }
  
     func retryLoadCountries() {
         retryError.hide()

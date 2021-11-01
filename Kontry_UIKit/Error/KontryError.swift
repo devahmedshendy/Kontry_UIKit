@@ -14,14 +14,18 @@ struct KontryError: Error, CustomStringConvertible {
     var description: String
     
     init(_ error: URLError) {
-        description = "NETWORK_ERROR: \(error.userInfo)"
+        description = "\nNETWORK_ERROR: \(error.localizedDescription)\n"
     }
     
     init(_ error: DecodingError) {
-        description = "DECODING_ERROR: \(error.localizedDescription)"
+        description = "\nDECODING_ERROR: \(error.localizedDescription)\n"
     }
     
     init(_ error: PersistenceError) {
-        description = "PERSISTENCE_ERROR: \(error.userInfo)"
+        description = "\nPERSISTENCE_ERROR: \(error.localizedDescription)\n"
+    }
+    
+    init(_ error: Error) {
+        description = "\nUNKNOWN_ERROR: \(error.localizedDescription)\n"
     }
 }

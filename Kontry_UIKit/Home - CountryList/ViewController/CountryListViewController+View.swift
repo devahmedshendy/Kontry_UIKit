@@ -38,6 +38,12 @@ extension CountryListViewController {
         definesPresentationContext = true
     }
     
+}
+
+// MARK: - Loading & RetryError Views
+
+extension CountryListViewController {
+    
     func configureLoadingView() {
         // Constraint Configuration
         loadingView.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +63,7 @@ extension CountryListViewController {
         NSLayoutConstraint.activate([
             retryErrorView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             retryErrorView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            retryErrorView.topAnchor.constraint(equalTo: view.topAnchor),
+            retryErrorView.topAnchor.constraint(equalTo: searchController.searchBar.bottomAnchor),
             retryErrorView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }

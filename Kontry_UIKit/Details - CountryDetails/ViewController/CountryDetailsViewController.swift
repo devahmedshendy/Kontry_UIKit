@@ -147,6 +147,7 @@ class CountryDetailsViewController: UIViewController {
             .sink(receiveValue: { [weak self] show in
                 if show {
                     self?.hideAllViews()
+                    self?.hideRetryErrorView()
                     self?.showLoadingView()
                 } else {
                     self?.hideLoadingView()

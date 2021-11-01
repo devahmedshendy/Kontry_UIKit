@@ -41,7 +41,13 @@ final class TheCountriesRepository: CountriesRepository {
             .getAll(params: [ "fields": CountryModel.fields])
             .mapError { KontryError($0) }
             .decode(type: [CountryModel].self, decoder: jsonDecoder)
-            .mapError { KontryError($0 as! DecodingError) }
+            .mapError { error -> KontryError in
+                if let kontryError = error as? KontryError {
+                    return kontryError
+                }
+                
+                return KontryError(error as! DecodingError)
+            }
             .eraseToAnyPublisher()
     }
     
@@ -62,6 +68,8 @@ final class TheCountriesRepository: CountriesRepository {
                 return Just(data)
                     .decode(type: [CountryModel].self, decoder: self.jsonDecoder)
                     .tryCatch { error -> AnyPublisher<[CountryModel], DecodingError> in
+                        
+                        // The api is a different JSON with status 404 to say no country found for such search keyword
                         if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
                             if let status = json["status"] as? Int, status == 404 {
                                     return Just([])
@@ -72,7 +80,7 @@ final class TheCountriesRepository: CountriesRepository {
                         
                         throw error
                     }
-                    .mapError { KontryError($0 as! DecodingError) }
+                    .mapError { KontryError($0) }
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
