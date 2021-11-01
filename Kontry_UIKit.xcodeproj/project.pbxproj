@@ -133,6 +133,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		64071D6A273031BC00D72B1C /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				64D9CEAD271FF54900A53794 /* DetailsEntity+CoreDataClass.swift */,
+				64D9CEAE271FF54900A53794 /* DetailsEntity+CoreDataProperties.swift */,
+				64D9CEAF271FF54900A53794 /* FlagEntity+CoreDataClass.swift */,
+				64D9CEB0271FF54900A53794 /* FlagEntity+CoreDataProperties.swift */,
+				64D9CEB1271FF54900A53794 /* LanguageEntity+CoreDataClass.swift */,
+				64D9CEB2271FF54900A53794 /* LanguageEntity+CoreDataProperties.swift */,
+				64D9CEB3271FF54900A53794 /* CurrencyEntity+CoreDataClass.swift */,
+				64D9CEB4271FF54900A53794 /* CurrencyEntity+CoreDataProperties.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
 		6446D43C272F381E00773B2C /* Error */ = {
 			isa = PBXGroup;
 			children = (
@@ -334,14 +349,6 @@
 		64DD417026B12CD9007E5135 = {
 			isa = PBXGroup;
 			children = (
-				64D9CEAD271FF54900A53794 /* DetailsEntity+CoreDataClass.swift */,
-				64D9CEAE271FF54900A53794 /* DetailsEntity+CoreDataProperties.swift */,
-				64D9CEAF271FF54900A53794 /* FlagEntity+CoreDataClass.swift */,
-				64D9CEB0271FF54900A53794 /* FlagEntity+CoreDataProperties.swift */,
-				64D9CEB1271FF54900A53794 /* LanguageEntity+CoreDataClass.swift */,
-				64D9CEB2271FF54900A53794 /* LanguageEntity+CoreDataProperties.swift */,
-				64D9CEB3271FF54900A53794 /* CurrencyEntity+CoreDataClass.swift */,
-				64D9CEB4271FF54900A53794 /* CurrencyEntity+CoreDataProperties.swift */,
 				64DD417B26B12CD9007E5135 /* Kontry_UIKit */,
 				64DD417A26B12CD9007E5135 /* Products */,
 			);
@@ -364,6 +371,7 @@
 				647FCB0C27244ACC00402522 /* Common */,
 				647D37FD26D288D40050C292 /* Repository */,
 				6455089C26D44CFA00796628 /* DataSource */,
+				64071D6A273031BC00D72B1C /* Entity */,
 				64868F1D272F885500C9E3B6 /* Delegate */,
 				6446D46E272F810D00773B2C /* Extension */,
 				6446D43C272F381E00773B2C /* Error */,
