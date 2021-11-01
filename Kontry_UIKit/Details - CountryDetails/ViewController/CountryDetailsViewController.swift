@@ -99,12 +99,13 @@ class CountryDetailsViewController: UIViewController {
     private func configureViewModel() {
         vm = CountryDetailsViewModel(
             alpha2Code: country!.alpha2Code,
-            countriesRepository: CountriesRepository(
-                countriesApiService: RestCountriesService(),
-                persistenceService: CoreDataService()
+            countriesRepository: TheCountriesRepository(
+                jsonDecoder: JSONDecoder(),
+                remoteCountriesSource: RestCountriesSource(),
+                localPersistenceSource: CoreDataSource()
             ),
-            loadingViewModel: VisibilityViewModel(),
-            retryErrorViewModel: VisibilityViewModel()
+            loadingViewModel: TheVisibilityViewModel(),
+            retryErrorViewModel: TheVisibilityViewModel()
         )
         
         bindToDetailsPublisher()
@@ -202,16 +203,16 @@ class CountryDetailsViewController: UIViewController {
 
 //MARK: - Delegates
 
-//MARK: RetryErrorViewDelegate
-extension CountryDetailsViewController: RetryErrorViewDelegate {
+//MARK: RetryDelegate
+extension CountryDetailsViewController: RetryDelegate {
     func didPressRetry() {
         vm.retryLoadCountries()
         flagImageView.loadFlag()
     }
 }
 
-//MARK: BackActionDelegate
-extension CountryDetailsViewController: BackActionDelegate {
+//MARK: NavigateBackDelegate
+extension CountryDetailsViewController: NavigateBackDelegate {
     func didPressBack() {
         navigationController?.popViewController(animated: true)
     }

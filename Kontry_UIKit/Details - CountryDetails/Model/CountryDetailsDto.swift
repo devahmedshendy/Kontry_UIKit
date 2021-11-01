@@ -44,7 +44,7 @@ extension CountryDetailsDto {
                 .map { $0.code ?? "" }
                 .joined(separator: ", ")
             
-            return string.isEmpty ? Constant.UNAVAILABLE : string
+            return string.isEmpty ? Constant.unavailable : string
         }()
         
         languages = {
@@ -52,7 +52,7 @@ extension CountryDetailsDto {
                 .map { $0.name }
                 .joined(separator: ", ")
             
-            return string.isEmpty ? Constant.UNAVAILABLE : string
+            return string.isEmpty ? Constant.unavailable : string
         }()
     }
 }

@@ -8,13 +8,13 @@
 import Foundation
 import Combine
 
-protocol VisibilityViewModelProtocol {
+protocol VisibilityViewModel {
     func getPublisher() -> PassthroughSubject<Bool, Never>
     func show()
     func hide()
 }
 
-final class VisibilityViewModel: VisibilityViewModelProtocol {
+final class TheVisibilityViewModel: VisibilityViewModel {
     
     //MARK: - Properties
     

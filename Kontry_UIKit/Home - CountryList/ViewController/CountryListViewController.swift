@@ -73,12 +73,13 @@ class CountryListViewController: UIViewController {
     
     private func configureViewModel() {
         vm = CountryListViewModel(
-            countriesRepository: CountriesRepository(
-                countriesApiService: RestCountriesService(),
-                persistenceService: CoreDataService()
+            countriesRepository: TheCountriesRepository(
+                jsonDecoder: JSONDecoder(),
+                remoteCountriesSource: RestCountriesSource(),
+                localPersistenceSource: CoreDataSource()
             ),
-            loadingViewModel: VisibilityViewModel(),
-            retryErrorViewModel: VisibilityViewModel()
+            loadingViewModel: TheVisibilityViewModel(),
+            retryErrorViewModel: TheVisibilityViewModel()
         )
         
         
@@ -225,8 +226,8 @@ extension CountryListViewController: UISearchBarDelegate {
     }
 }
 
-//MARK: RetryErrorViewDelegate
-extension CountryListViewController: RetryErrorViewDelegate {
+//MARK: RetryDelegate
+extension CountryListViewController: RetryDelegate {
     func didPressRetry() {
         vm.retryLoadCountries()
     }

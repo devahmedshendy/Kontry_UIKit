@@ -1,5 +1,5 @@
 //
-//  CoreDataService.swift
+//  CoreDataSource.swift
 //  Kontry_UIKit
 //
 //  Created by  Ahmed Shendy on 10/9/21.
@@ -12,7 +12,7 @@ import Combine
 // Responsibility:
 // It handle tasks that require storing data for offline use.
 // It does it using CoreData.
-final class CoreDataService: PersistenceServiceProtocol {
+final class CoreDataSource: LocalPersistenceSource {
     
     //MARK: - Properties
     
@@ -20,7 +20,7 @@ final class CoreDataService: PersistenceServiceProtocol {
     
     //MARK: - CRUD Operations
     
-    func findFlagEntity(for alpha2Code: String) -> AnyPublisher<FlagEntity?, Error> {
+    func findFlagEntity(for alpha2Code: String) -> AnyPublisher<FlagEntity?, PersistenceError> {
         let fetchRequest: NSFetchRequest<FlagEntity> = FlagEntity.fetchRequest()
         
         fetchRequest.fetchLimit = 1
@@ -38,7 +38,7 @@ final class CoreDataService: PersistenceServiceProtocol {
         saveContext()
     }
     
-    func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, Error> {
+    func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, PersistenceError> {
         let fetchRequest: NSFetchRequest<DetailsEntity> = DetailsEntity.fetchRequest()
         
         fetchRequest.fetchLimit = 1
@@ -96,12 +96,12 @@ final class CoreDataService: PersistenceServiceProtocol {
             try coreDataStack.managedContext.save()
             
         } catch let error as NSError {
-            print("COREDATA_ERROR: \(error.userInfo)")
+            print("LOCAL_PERSISTENCE_ERROR: \(error.userInfo)")
         }
     }
     
-    private func fetchSingleItem<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<T?, Error> {
-        return Future<T?, CoreDataError> {
+    private func fetchSingleItem<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<T?, PersistenceError> {
+        return Future<T?, Error> {
             [weak self] promise in
             guard let self = self else { return }
             
@@ -110,10 +110,10 @@ final class CoreDataService: PersistenceServiceProtocol {
                 promise(.success(result.first))
                 
             } catch let error as NSError {
-                promise(.failure(CoreDataError(error: error)))
+                promise(.failure(PersistenceError(error: error)))
             }
         }
-        .mapError { $0 as Error }
+        .mapError { $0 as! PersistenceError }
         .eraseToAnyPublisher()
     }
 }

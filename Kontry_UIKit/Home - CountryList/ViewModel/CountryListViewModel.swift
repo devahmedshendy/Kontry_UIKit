@@ -15,21 +15,21 @@ final class CountryListViewModel {
     //MARK: - Properties
     
     let countriesPublisher = PassthroughSubject<[CountryDto], Never>()
-    
-    private(set) var countriesRepository: CountriesRepositoryProtocol
     private var subscription: AnyCancellable?
     
-    let loading: VisibilityViewModelProtocol
-    let retryError: VisibilityViewModelProtocol
+    private var countriesRepository: CountriesRepository
+    
+    let loading: VisibilityViewModel
+    let retryError: VisibilityViewModel
     
     var searchText: String = ""
     
     //MARK: - init Methods
     
     init(
-        countriesRepository: CountriesRepositoryProtocol,
-        loadingViewModel: VisibilityViewModelProtocol,
-        retryErrorViewModel: VisibilityViewModelProtocol
+        countriesRepository: CountriesRepository,
+        loadingViewModel: VisibilityViewModel,
+        retryErrorViewModel: VisibilityViewModel
     ) {
         self.countriesRepository = countriesRepository
         self.loading = loadingViewModel

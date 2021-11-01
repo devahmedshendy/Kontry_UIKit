@@ -75,9 +75,10 @@ class CountryCell: UICollectionViewCell {
     private func configureViewModel() {
         vm = FlagViewModel(
             size: .w40,
-            flagsRepository: FlagsRepository(
-                flagsApiService: FlagPediaService(),
-                persistenceService: CoreDataService()
+            flagsRepository: TheFlagsRepository(
+                jsonDecoder: JSONDecoder(),
+                remoteFlagsSource: FlagPediaSource(),
+                localPersistenceSource: CoreDataSource()
             )
         )
         

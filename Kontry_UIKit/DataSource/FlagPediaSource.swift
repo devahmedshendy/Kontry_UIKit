@@ -1,5 +1,5 @@
 //
-//  FlagPediaService.swift
+//  FlagPediaSource.swift
 //  Kontry_UIKit
 //
 //  Created by  Ahmed Shendy on 9/29/21.
@@ -11,7 +11,7 @@ import Combine
 // Responsibility:
 // It handles network-related tasks for FlagPedia API.
 // It does it using URLSession.
-final class FlagPediaService: FlagsApiServiceProtocol {
+final class FlagPediaSource: RemoteFlagsSource {
     
     //MARK: - Properties
     
@@ -30,30 +30,32 @@ final class FlagPediaService: FlagsApiServiceProtocol {
     
     //MARK: - API Calls
     
-    func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, Error> {
+    func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, URLError> {
         let url = ApiUtility.createURL(alpha2Code: field.lowercased(), size: size)
         let session = enableCache ? ephemeralSession : defaultSession
         
         return session
             .dataTaskPublisher(for: url)
-            .map { result -> Data? in
+            .tryMap { result -> Data? in
                 let response = result.response as! HTTPURLResponse
                 let statusCode = response.statusCode
 
                 if statusCode == 404 {
-                    return nil
+                    throw URLError(
+                        URLError.Code.badURL ,
+                        userInfo: ["NSLocalizedDescriptionKey" : "Page not found for \(url)"])
                 }
 
                 return result.data
             }
-            .mapError { $0 as Error }
+            .mapError { $0 as! URLError }
             .eraseToAnyPublisher()
     }
 }
 
 //MARK: - API Utility
 
-extension FlagPediaService {
+extension FlagPediaSource {
     // Responsibility:
     // It encapsulates info related to RestCountries API (ex: baseURL, endpoints).
     // It helps create URL objects to use to communicate with the API.

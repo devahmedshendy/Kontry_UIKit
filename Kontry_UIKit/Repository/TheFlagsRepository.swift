@@ -1,5 +1,5 @@
 //
-//  FlagsRepository.swift
+//  TheFlagsRepository.swift
 //  Kontry_UIKit
 //
 //  Created by  Ahmed Shendy on 10/23/21.
@@ -8,22 +8,24 @@
 import Foundation
 import Combine
 
-final class FlagsRepository: FlagsRepositoryProtocol {
+final class TheFlagsRepository: FlagsRepository {
     
     //MARK: - Properties
     
-    private lazy var jsonDecoder = JSONDecoder()
-    private var flagsApiService: FlagsApiServiceProtocol
-    private var persistenceService: PersistenceServiceProtocol
+    private let jsonDecoder: JSONDecoder
+    private let remoteFlagsSource: RemoteFlagsSource
+    private let localPersistenceSource: LocalPersistenceSource
     
     //MARK: - init Methods
     
     init(
-        flagsApiService: FlagsApiServiceProtocol,
-        persistenceService: PersistenceServiceProtocol
+        jsonDecoder: JSONDecoder,
+        remoteFlagsSource: RemoteFlagsSource,
+        localPersistenceSource: LocalPersistenceSource
     ) {
-        self.flagsApiService = flagsApiService
-        self.persistenceService = persistenceService
+        self.jsonDecoder = jsonDecoder
+        self.remoteFlagsSource = remoteFlagsSource
+        self.localPersistenceSource = localPersistenceSource
     }
     
     //MARK: - Data Operations
@@ -32,11 +34,9 @@ final class FlagsRepository: FlagsRepositoryProtocol {
     // It only request flag of width size 40px.
     func get40pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         
-        return self.flagsApiService
+        return self.remoteFlagsSource
             .get(by: alpha2Code, size: FlagSize.w40, enableCache: true)
-            .mapError { error -> KontryError in
-                return .network(description: error.localizedDescription)
-            }
+            .mapError { KontryError($0) }
             .eraseToAnyPublisher()
     }
     
@@ -48,36 +48,33 @@ final class FlagsRepository: FlagsRepositoryProtocol {
     //   otherwise request it from the API, then save it in coredata.
     func get160pxWidthFlag(for alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
         
-        return persistenceService
+        return localPersistenceSource
             .findFlagEntity(for: alpha2Code)
-            .flatMap { [weak self] flag -> AnyPublisher<Data?, Error> in
-                guard let self = self else { return Empty().eraseToAnyPublisher() }
-                
-                if let flag = flag {
-                    return Just(flag.image)
-                        .setFailureType(to: Error.self)
+            .mapError { KontryError($0) }
+            .flatMap { [weak self] flag -> AnyPublisher<Data?, KontryError> in
+                guard let self = self else {
+                    return Just(nil)
+                        .setFailureType(to: KontryError.self)
                         .eraseToAnyPublisher()
                 }
                 
-                return self.flagsApiService
+                if let flag = flag {
+                    return Just(flag.image)
+                        .setFailureType(to: KontryError.self)
+                        .eraseToAnyPublisher()
+                }
+                
+                return self.remoteFlagsSource
                     .get(by: alpha2Code, size: FlagSize.w160, enableCache: false)
+                    .mapError { KontryError($0) }
                     .map { image -> Data? in
                         guard let image = image else { return nil }
 
-                        self.persistenceService.createFlagEntity(for: alpha2Code, image)
+                        self.localPersistenceSource.createFlagEntity(for: alpha2Code, image)
 
                         return image
                     }
                     .eraseToAnyPublisher()
-            }
-            .mapError { error -> KontryError in
-                switch error {
-                case is URLError:
-                    return .network(description: error.localizedDescription)
-
-                default:
-                    return error as? KontryError ?? .unknown(description: error.localizedDescription)
-                }
             }
             .eraseToAnyPublisher()
     }

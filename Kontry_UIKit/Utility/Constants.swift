@@ -8,7 +8,7 @@
 import Foundation
 
 final class Constant {
-    class ConstraintIdentifier {
+    struct ConstraintIdentifier {
         static let navigationBarViewTop = "navigationBarViewTop"
         static let detailStackTrailing = "detailStackTrailing"
         static let detailStackTop = "detailStackTop"
@@ -21,16 +21,16 @@ final class Constant {
         static let mapViewWidth = "mapViewWidth"
     }
     
-    class Text {
+    struct Text {
         static let loading = "loading"
         static let retry = "retry"
         static let failedToFetchContent = "Failed to fetch content"
     }
     
-    class Placeholder {
+    struct Placeholder {
         static let searchByName = "Search By Name"
     }
     
-    static let UNAVAILABLE = "UNAVAILABLE"
-    static let BAD_ALPHA2CODE = "BAD_ALPHA2CODE"
+    static let unavailable = "UNAVAILABLE"
+    static let badAlpha2Code = "BAD_ALPHA2CODE"
 }

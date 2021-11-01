@@ -1,5 +1,5 @@
 //
-//  CountriesRepository.swift
+//  TheCountriesRepository.swift
 //  Kontry_UIKit
 //
 //  Created by  Ahmed Shendy on 10/23/21.
@@ -8,22 +8,24 @@
 import Foundation
 import Combine
 
-final class CountriesRepository: CountriesRepositoryProtocol {
+final class TheCountriesRepository: CountriesRepository {
     
     //MARK: - Properties
     
-    private lazy var jsonDecoder = JSONDecoder()
-    private let countriesApiService: CountriesApiServiceProtocol
-    private let persistenceService: PersistenceServiceProtocol
+    private let jsonDecoder: JSONDecoder
+    private let remoteCountriesSource: RemoteCountriesSource
+    private let localPersistenceSource: LocalPersistenceSource
     
     //MARK: - init Methods
     
     init(
-        countriesApiService: CountriesApiServiceProtocol,
-        persistenceService: PersistenceServiceProtocol
+        jsonDecoder: JSONDecoder,
+        remoteCountriesSource: RemoteCountriesSource,
+        localPersistenceSource: LocalPersistenceSource
     ) {
-        self.countriesApiService = countriesApiService
-        self.persistenceService = persistenceService
+        self.jsonDecoder = jsonDecoder
+        self.remoteCountriesSource = remoteCountriesSource
+        self.localPersistenceSource = localPersistenceSource
     }
     
     //MARK: - Data Operations
@@ -32,61 +34,41 @@ final class CountriesRepository: CountriesRepositoryProtocol {
     // It restrict requested fields to the fields of Country data mdoel.
     func getCountryList() -> AnyPublisher<[CountryModel], KontryError> {
         
-        return countriesApiService
+        return remoteCountriesSource
             .getAll(params: [ "fields": CountryModel.fields])
+            .mapError { KontryError($0) }
             .decode(type: [CountryModel].self, decoder: jsonDecoder)
-            .mapError { error -> KontryError in
-                switch error {
-                case is URLError:
-                    return .network(description: error.localizedDescription)
-                    
-                case is DecodingError:
-                    return .decoding(description: error.localizedDescription)
-                    
-                default:
-                    return error as? KontryError ?? .unknown(description: error.localizedDescription)
-                }
-            }
+            .mapError { KontryError($0 as! DecodingError) }
             .eraseToAnyPublisher()
     }
     
     func getCountryListByName(_ search: String) -> AnyPublisher<[CountryModel], KontryError> {
         
-        return countriesApiService
+        return remoteCountriesSource
             .getAllByName(search: search, params: [ "fields": CountryModel.fields])
-            .flatMap { [weak self] data -> AnyPublisher<[CountryModel], Error> in
+            .mapError { KontryError($0) }
+            .flatMap { [weak self] data -> AnyPublisher<[CountryModel], KontryError> in
                 guard let self = self, let data = data else {
                     return Just([])
-                        .setFailureType(to: Error.self)
+                        .setFailureType(to: KontryError.self)
                         .eraseToAnyPublisher()
                 }
                 
                 return Just(data)
                     .decode(type: [CountryModel].self, decoder: self.jsonDecoder)
-                    .tryCatch { error -> AnyPublisher<[CountryModel], Error> in
+                    .tryCatch { error -> AnyPublisher<[CountryModel], DecodingError> in
                         if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
                             if let status = json["status"] as? Int, status == 404 {
                                     return Just([])
-                                        .setFailureType(to: Error.self)
+                                        .setFailureType(to: DecodingError.self)
                                         .eraseToAnyPublisher()
                             }
                         }
                         
                         throw error
                     }
+                    .mapError { KontryError($0 as! DecodingError) }
                     .eraseToAnyPublisher()
-            }
-            .mapError { error -> KontryError in
-                switch error {
-                case is URLError:
-                    return .network(description: error.localizedDescription)
-                    
-                case is DecodingError:
-                    return .decoding(description: error.localizedDescription)
-                    
-                default:
-                    return error as? KontryError ?? .unknown(description: error.localizedDescription)
-                }
             }
             .eraseToAnyPublisher()
     }
@@ -101,12 +83,16 @@ final class CountriesRepository: CountriesRepositoryProtocol {
         return findCountryDetailsLocally(for: alpha2Code)
             // Here we check if no details found locally, then get it from remote api
             // Otherwise, just pass the found details to downstream
-            .flatMap { [weak self] countryDetails -> AnyPublisher<CountryDetailsModel?, Error> in
-                guard let self = self else { return Empty().eraseToAnyPublisher() }
+            .flatMap { [weak self] countryDetails -> AnyPublisher<CountryDetailsModel?, KontryError> in
+                guard let self = self else {
+                    return Just(nil)
+                    .setFailureType(to: KontryError.self)
+                    .eraseToAnyPublisher()
+                }
                 
                 if let countryDetails = countryDetails {
                     return Just(countryDetails)
-                        .setFailureType(to: Error.self)
+                        .setFailureType(to: KontryError.self)
                         .eraseToAnyPublisher()
                 }
                 
@@ -116,36 +102,22 @@ final class CountriesRepository: CountriesRepositoryProtocol {
                         guard let self = self else { return countryDetails }
                         
                         if let countryDetails = countryDetails {
-                            self.persistenceService.createDetailsEntity(from: countryDetails)
+                            self.localPersistenceSource.createDetailsEntity(from: countryDetails)
                         }
                         
                         return countryDetails
                     }
                     .eraseToAnyPublisher()
             }
-            .mapError{ error -> KontryError in
-                switch error {
-                case is URLError:
-                    return .network(description: error.localizedDescription)
-
-                case is CoreDataError:
-                    return .coredata(description: error.localizedDescription)
-
-                case is DecodingError:
-                    return .decoding(description: error.localizedDescription)
-
-                default:
-                    return error as? KontryError ?? .unknown(description: error.localizedDescription)
-                }
-            }
             .eraseToAnyPublisher()
     }
     
     // Get country details using alpha2Code from CoreData.
-    private func findCountryDetailsLocally(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, Error> {
+    private func findCountryDetailsLocally(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, KontryError> {
         
-        return persistenceService
+        return localPersistenceSource
             .findDetailsEntity(for: alpha2Code)
+            .mapError { KontryError($0) }
             .map { details -> CountryDetailsModel? in
                 guard let details = details else { return nil }
                 
@@ -156,22 +128,24 @@ final class CountriesRepository: CountriesRepositoryProtocol {
     
     // Get country details using alpha2Code from RestCountries API.
     // It restrict requested fields to the fields of CountryDetails data mdoel.
-    private func findCountryDetailsRemotely(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, Error> {
+    private func findCountryDetailsRemotely(for alpha2Code: String) -> AnyPublisher<CountryDetailsModel?, KontryError> {
         
-        return countriesApiService
+        return remoteCountriesSource
             .getOne(by: .alpha2Code, fieldValue: alpha2Code, params: [ "fields": CountryDetailsModel.fields])
-            .flatMap { [weak self] data -> AnyPublisher<CountryDetailsModel?, Error> in
+            .mapError { KontryError($0) }
+            .flatMap { [weak self] data -> AnyPublisher<CountryDetailsModel?, KontryError> in
                 guard let self = self else { return Empty().eraseToAnyPublisher() }
                 
                 guard let data = data else {
                     return Just(nil)
-                        .setFailureType(to: Error.self)
+                        .setFailureType(to: KontryError.self)
                         .eraseToAnyPublisher()
                 }
                 
                 return Just(data)
                     .decode(type: CountryDetailsModel.self, decoder: self.jsonDecoder)
                     .map { countryDetails -> CountryDetailsModel? in countryDetails }
+                    .mapError { KontryError($0 as! DecodingError) }
                     .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()

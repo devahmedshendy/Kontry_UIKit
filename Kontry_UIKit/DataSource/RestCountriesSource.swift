@@ -1,5 +1,5 @@
 //
-//  RestCountriesService.swift
+//  RestCountriesSource.swift
 //  Kontry_UIKit
 //
 //  Created by  Ahmed Shendy on 8/23/21.
@@ -11,7 +11,7 @@ import Combine
 // Responsibility:
 // It handles network-related tasks for RestCountries API.
 // It does it using URLSession.
-final class RestCountriesService: CountriesApiServiceProtocol {
+final class RestCountriesSource: RemoteCountriesSource {
     
     //MARK: - Properties
     
@@ -23,18 +23,18 @@ final class RestCountriesService: CountriesApiServiceProtocol {
     
     //MARK: - API Calls
     
-    func getAll(params: [String : String]) -> AnyPublisher<Data, Error> {
+    func getAll(params: [String : String]) -> AnyPublisher<Data, URLError> {
         let url = ApiUtility.createURL(pathParam: .all,
                                        queryParams: params)
         
         return defaultSession
             .dataTaskPublisher(for: url)
             .map { $0.data }
-            .mapError { $0 as Error }
+            .mapError { $0 as URLError }
             .eraseToAnyPublisher()
     }
     
-    func getAllByName(search: String, params: [String : String]) -> AnyPublisher<Data?, Error> {
+    func getAllByName(search: String, params: [String : String]) -> AnyPublisher<Data?, URLError> {
         let url = ApiUtility.createURL(pathParam: .name,
                                        pathValue: search,
                                        queryParams: params)
@@ -44,21 +44,22 @@ final class RestCountriesService: CountriesApiServiceProtocol {
             .tryMap { result -> Data? in
                 let response = result.response as! HTTPURLResponse
                 let statusCode = response.statusCode
-                
-                if statusCode == 404 { // This is fatal error
-                    throw URLError(URLError.Code.badURL , userInfo: ["NSLocalizedDescriptionKey" : "Page not found"])
-//                    return nil
+
+                if statusCode == 404 {
+                    throw URLError(
+                        URLError.Code.badURL ,
+                        userInfo: ["NSLocalizedDescriptionKey" : "Page not found for \(url)"])
                 }
-                
+
                 return result.data
             }
-            .mapError { $0 as Error }
+            .mapError { $0 as! URLError }
             .eraseToAnyPublisher()
     }
     
     func getOne(by field: CountriesApiQueryField,
                 fieldValue: String,
-                params: [String : String]) -> AnyPublisher<Data?, Error> {
+                params: [String : String]) -> AnyPublisher<Data?, URLError> {
         let url = ApiUtility.createURL(pathParam: field,
                                        pathValue: fieldValue,
                                        queryParams: params)
@@ -75,14 +76,14 @@ final class RestCountriesService: CountriesApiServiceProtocol {
                 
                 return result.data
             }
-            .mapError { $0 as Error }
+            .mapError { $0 as! URLError }
             .eraseToAnyPublisher()
     }
 }
 
 //MARK: - API Utility
 
-extension RestCountriesService {
+extension RestCountriesSource {
     // Responsibility:
     // It encapsulates info related to RestCountries API (ex: baseURL, endpoints).
     // It helps create URL objects to use to communicate with the API.

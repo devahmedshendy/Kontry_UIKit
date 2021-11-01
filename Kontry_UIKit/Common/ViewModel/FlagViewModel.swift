@@ -18,7 +18,7 @@ final class FlagViewModel {
     private var subscription: AnyCancellable?
     
     private let size: FlagSize
-    private let flagsRepository: FlagsRepositoryProtocol
+    private let flagsRepository: FlagsRepository
     
     var alpha2Code: String = "" {
         didSet {
@@ -30,7 +30,7 @@ final class FlagViewModel {
     
     init(
         size: FlagSize,
-        flagsRepository: FlagsRepositoryProtocol
+        flagsRepository: FlagsRepository
     ) {
         self.size = size
         self.flagsRepository = flagsRepository

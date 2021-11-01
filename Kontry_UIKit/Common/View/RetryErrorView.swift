@@ -21,7 +21,7 @@ class RetryErrorView: UIView {
     
     //MARK: - Properties
     
-    var delegate: RetryErrorViewDelegate?
+    var delegate: RetryDelegate?
     
     //MARK: - init Methods
     

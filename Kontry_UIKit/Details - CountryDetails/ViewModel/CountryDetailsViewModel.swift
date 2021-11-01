@@ -15,12 +15,12 @@ final class CountryDetailsViewModel {
     //MARK: - Properties
     
     let detailsPublisher = PassthroughSubject<CountryDetailsDto, Never>()
-    
     private var subscription: AnyCancellable?
-    private let countriesRepository: CountriesRepositoryProtocol
     
-    let loading: VisibilityViewModelProtocol
-    let retryError: VisibilityViewModelProtocol
+    private let countriesRepository: CountriesRepository
+    
+    let loading: VisibilityViewModel
+    let retryError: VisibilityViewModel
     
     var alpha2Code: String
     
@@ -28,9 +28,9 @@ final class CountryDetailsViewModel {
     
     init(
         alpha2Code: String,
-        countriesRepository: CountriesRepositoryProtocol,
-        loadingViewModel: VisibilityViewModelProtocol,
-        retryErrorViewModel: VisibilityViewModelProtocol
+        countriesRepository: CountriesRepository,
+        loadingViewModel: VisibilityViewModel,
+        retryErrorViewModel: VisibilityViewModel
     ) {
         self.alpha2Code = alpha2Code
         self.countriesRepository = countriesRepository
@@ -73,12 +73,12 @@ final class CountryDetailsViewModel {
             )
     }
     
-    func loadCountryDetails(of code: String) -> AnyPublisher<CountryDetailsModel?, Error> {
-        return countriesRepository
-            .getCountryDetails(for: code)
-            .mapError { $0 as Error }
-            .eraseToAnyPublisher()
-    }
+//    func loadCountryDetails(of code: String) -> AnyPublisher<CountryDetailsModel?, Error> {
+//        return countriesRepository
+//            .getCountryDetails(for: code)
+//            .mapError { $0 as Error }
+//            .eraseToAnyPublisher()
+//    }
  
     func retryLoadCountries() {
         retryError.hide()

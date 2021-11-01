@@ -16,7 +16,7 @@ class NavigationBarView: UIView {
     
     //MARK: - Properties
     
-    var delegate: BackActionDelegate!
+    var delegate: NavigateBackDelegate!
     
     //MARK: - init Methods
     

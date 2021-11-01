@@ -65,7 +65,7 @@ struct CountryDetailsModel: Codable {
         alpha2Code = try container.decode(String.self, forKey: .alpha2Code)
         capital = try {
             let value = try container.decode(String.self, forKey: .capital)
-            return value.isEmpty ? Constant.UNAVAILABLE : value
+            return value.isEmpty ? Constant.unavailable : value
         }()
         region = try container.decode(String.self, forKey: .region)
         population = try container.decode(Int.self, forKey: .population)
