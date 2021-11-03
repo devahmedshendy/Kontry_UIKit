@@ -39,8 +39,7 @@ final class TheFlagsRepository: FlagsRepository {
         
         return self.remoteFlagsSource
             .get(by: alpha2Code, size: FlagSize.w40, enableCache: true)
-            .mapError { KontryError($0) }
-            .eraseToAnyPublisher()
+            .mapErrorToKontryError()
     }
     
     // Get Flag image from CoreData or FlagPedia API.
@@ -77,7 +76,6 @@ final class TheFlagsRepository: FlagsRepository {
                     }
                     .eraseToAnyPublisher()
             }
-            .mapError { KontryError($0) }
-            .eraseToAnyPublisher()
+            .mapErrorToKontryError()
     }
 }

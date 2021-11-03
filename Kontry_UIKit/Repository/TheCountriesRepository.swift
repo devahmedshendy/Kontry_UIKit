@@ -40,8 +40,7 @@ final class TheCountriesRepository: CountriesRepository {
         return remoteCountriesSource
             .getAll(params: [ "fields": CountryModel.fields])
             .decode(type: [CountryModel].self, decoder: jsonDecoder)
-            .mapError { KontryError($0) }
-            .eraseToAnyPublisher()
+            .mapErrorToKontryError()
     }
     
     // Get list of countries that match seach keyword from RestCountries API.
@@ -74,8 +73,7 @@ final class TheCountriesRepository: CountriesRepository {
                     }
                     .eraseToAnyPublisher()
             }
-            .mapError { KontryError($0) }
-            .eraseToAnyPublisher()
+            .mapErrorToKontryError()
     }
     
     // Get more details about specific country using alpha2Code from CoreData otherwise from RestCountries API.
@@ -114,8 +112,7 @@ final class TheCountriesRepository: CountriesRepository {
                     }
                     .eraseToAnyPublisher()
             }
-            .mapError { KontryError($0) }
-            .eraseToAnyPublisher()
+            .mapErrorToKontryError()
     }
     
     // Get country details using alpha2Code from CoreData.
@@ -152,7 +149,6 @@ final class TheCountriesRepository: CountriesRepository {
                     .map { countryDetails -> CountryDetailsModel? in countryDetails }
                     .eraseToAnyPublisher()
             }
-            .mapError { KontryError($0)  }
             .eraseToAnyPublisher()
     }
 }
