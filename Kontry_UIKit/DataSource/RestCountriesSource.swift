@@ -23,18 +23,18 @@ final class RestCountriesSource: RemoteCountriesSource {
     
     //MARK: - API Calls
     
-    func getAll(params: [String : String]) -> AnyPublisher<Data, URLError> {
+    func getAll(params: [String : String]) -> AnyPublisher<Data, Error> {
         let url = ApiUtility.createURL(pathParam: .all,
                                        queryParams: params)
         
         return defaultSession
             .dataTaskPublisher(for: url)
             .map { $0.data }
-            .mapError { $0 as URLError }
+            .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
     
-    func getAllByName(search: String, params: [String : String]) -> AnyPublisher<Data?, URLError> {
+    func getAllByName(search: String, params: [String : String]) -> AnyPublisher<Data?, Error> {
         let url = ApiUtility.createURL(pathParam: .name,
                                        pathValue: search,
                                        queryParams: params)
@@ -53,13 +53,12 @@ final class RestCountriesSource: RemoteCountriesSource {
 
                 return result.data
             }
-            .mapError { $0 as! URLError }
             .eraseToAnyPublisher()
     }
     
     func getOne(by field: CountriesApiQueryField,
                 fieldValue: String,
-                params: [String : String]) -> AnyPublisher<Data?, URLError> {
+                params: [String : String]) -> AnyPublisher<Data?, Error> {
         let url = ApiUtility.createURL(pathParam: field,
                                        pathValue: fieldValue,
                                        queryParams: params)
@@ -76,7 +75,7 @@ final class RestCountriesSource: RemoteCountriesSource {
                 
                 return result.data
             }
-            .mapError { $0 as URLError }
+            .mapError { $0 as Error }
             .eraseToAnyPublisher()
     }
 }

@@ -209,7 +209,7 @@ class CountryDetailsViewController: UIViewController {
 //MARK: RetryDelegate
 extension CountryDetailsViewController: RetryDelegate {
     func didPressRetry() {
-        vm.retryLoadCountries()
+        vm.retryLoadDetails()
         flagImageView.loadFlag()
     }
 }

@@ -20,7 +20,7 @@ final class CoreDataSource: LocalPersistenceSource {
     
     //MARK: - CRUD Operations
     
-    func findFlagEntity(for alpha2Code: String) -> AnyPublisher<FlagEntity?, PersistenceError> {
+    func findFlagEntity(for alpha2Code: String) -> AnyPublisher<FlagEntity?, Error> {
         let fetchRequest: NSFetchRequest<FlagEntity> = FlagEntity.fetchRequest()
         
         fetchRequest.fetchLimit = 1
@@ -38,7 +38,7 @@ final class CoreDataSource: LocalPersistenceSource {
         saveContext()
     }
     
-    func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, PersistenceError> {
+    func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, Error> {
         let fetchRequest: NSFetchRequest<DetailsEntity> = DetailsEntity.fetchRequest()
         
         fetchRequest.fetchLimit = 1
@@ -96,11 +96,11 @@ final class CoreDataSource: LocalPersistenceSource {
             try coreDataStack.managedContext.save()
             
         } catch let error as NSError {
-            print("LOCAL_PERSISTENCE_ERROR: \(error.userInfo)")
+            print("PERSISTENCE_ERROR: \(error.userInfo)")
         }
     }
     
-    private func fetchSingleItem<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<T?, PersistenceError> {
+    private func fetchSingleItem<T>(_ fetchRequest: NSFetchRequest<T>) -> AnyPublisher<T?, Error> {
         return Future<T?, Error> {
             [weak self] promise in
             guard let self = self else { return }
@@ -113,7 +113,6 @@ final class CoreDataSource: LocalPersistenceSource {
                 promise(.failure(PersistenceError(error: error)))
             }
         }
-        .mapError { $0 as! PersistenceError }
         .eraseToAnyPublisher()
     }
 }

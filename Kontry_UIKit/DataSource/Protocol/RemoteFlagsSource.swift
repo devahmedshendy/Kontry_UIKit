@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol RemoteFlagsSource {
-    func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, URLError>
+    func get(by field: String, size: FlagSize, enableCache: Bool) -> AnyPublisher<Data?, Error>
 }
 
 enum FlagSize {

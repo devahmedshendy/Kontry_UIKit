@@ -53,23 +53,21 @@ final class TheFlagsRepository: FlagsRepository {
         
         return localPersistenceSource
             .findFlagEntity(for: alpha2Code)
-            .mapError { KontryError($0) }
-            .flatMap { [weak self] flag -> AnyPublisher<Data?, KontryError> in
+            .flatMap { [weak self] flag -> AnyPublisher<Data?, Error> in
                 guard let self = self else {
                     return Just(nil)
-                        .setFailureType(to: KontryError.self)
+                        .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
                 
                 if let flag = flag {
                     return Just(flag.image)
-                        .setFailureType(to: KontryError.self)
+                        .setFailureType(to: Error.self)
                         .eraseToAnyPublisher()
                 }
                 
                 return self.remoteFlagsSource
                     .get(by: alpha2Code, size: FlagSize.w160, enableCache: false)
-                    .mapError { KontryError($0) }
                     .map { image -> Data? in
                         guard let image = image else { return nil }
 
@@ -79,6 +77,7 @@ final class TheFlagsRepository: FlagsRepository {
                     }
                     .eraseToAnyPublisher()
             }
+            .mapError { KontryError($0) }
             .eraseToAnyPublisher()
     }
 }

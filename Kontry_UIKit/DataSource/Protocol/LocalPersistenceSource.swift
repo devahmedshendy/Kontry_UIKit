@@ -9,9 +9,9 @@ import Foundation
 import Combine
 
 protocol LocalPersistenceSource {
-    func findFlagEntity(for alpha2Code: String) -> AnyPublisher<FlagEntity?, PersistenceError>
+    func findFlagEntity(for alpha2Code: String) -> AnyPublisher<FlagEntity?, Error>
     func createFlagEntity(for alpha2Code: String, _ image: Data)
     
-    func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, PersistenceError>
+    func findDetailsEntity(for alpha2Code: String) -> AnyPublisher<DetailsEntity?, Error>
     func createDetailsEntity(from countryDetails: CountryDetailsModel)
 }

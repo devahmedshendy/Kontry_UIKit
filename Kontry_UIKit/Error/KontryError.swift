@@ -13,19 +13,22 @@ import Foundation
 struct KontryError: Error, CustomStringConvertible {
     var description: String
     
-    init(_ error: URLError) {
-        description = "\nNETWORK_ERROR: \(error.localizedDescription)\n"
-    }
-    
-    init(_ error: DecodingError) {
-        description = "\nDECODING_ERROR: \(error.localizedDescription)\n"
-    }
-    
-    init(_ error: PersistenceError) {
-        description = "\nPERSISTENCE_ERROR: \(error.localizedDescription)\n"
-    }
-    
     init(_ error: Error) {
-        description = "\nUNKNOWN_ERROR: \(error.localizedDescription)\n"
+        switch error {
+        case is URLError:
+            description = "\nNETWORK_ERROR: \(error.localizedDescription)\n"
+            return
+            
+        case is DecodingError:
+            description = "\nDECODING_ERROR: \(error.localizedDescription)\n"
+            return
+            
+        case is PersistenceError:
+            description = "\nPERSISTENCE_ERROR: \(error.localizedDescription)\n"
+            return
+        
+        default:
+            description = "\nUNKNOWN_ERROR: \(error.localizedDescription)\n"
+        }
     }
 }

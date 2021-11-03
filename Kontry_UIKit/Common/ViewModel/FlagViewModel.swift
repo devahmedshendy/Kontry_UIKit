@@ -75,13 +75,13 @@ final class FlagViewModel {
         subscription = nil
     }
     
-    func get40WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
-        return flagsRepository
-            .get40pxWidthFlag(for: alpha2Code)
-    }
-    
-    func get160WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
-        return flagsRepository
-            .get160pxWidthFlag(for: alpha2Code)
-    }
+//    func get40WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
+//        return flagsRepository
+//            .get40pxWidthFlag(for: alpha2Code)
+//    }
+//    
+//    func get160WidthFlag(alpha2Code: String) -> AnyPublisher<Data?, KontryError> {
+//        return flagsRepository
+//            .get160pxWidthFlag(for: alpha2Code)
+//    }
 }

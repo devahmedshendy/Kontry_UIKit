@@ -73,7 +73,7 @@ final class CountryDetailsViewModel {
             )
     }
  
-    func retryLoadCountries() {
+    func retryLoadDetails() {
         retryError.hide()
         loadDetails()
     }
