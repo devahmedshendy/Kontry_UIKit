@@ -35,7 +35,7 @@ extension CountryDetailsDto {
     init(from details: CountryDetailsModel) {
         name = details.name
         alpha2Code = details.alpha2Code
-        capital = details.alpha2Code
+        capital = details.capital
         region = details.region
         population = "\(details.population) \(details.demonym)"
         
